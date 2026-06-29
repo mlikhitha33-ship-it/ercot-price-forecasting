@@ -1,4 +1,4 @@
-# Can a Machine Learn the Price of Electricity?
+# ERCOT day-ahead Electricity price forecasting
 
 *A data science project using real ERCOT market data, classical statistics and deep learning to forecast Texas wholesale electricity prices.*
 
