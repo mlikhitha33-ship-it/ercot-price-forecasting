@@ -219,10 +219,6 @@ Each script saves its output as a CSV or PNG back to your Drive folder so result
 
 ---
 
-## About
 
-**Likhitha Pavani**
-MS Information Science, University of North Texas (2025)
-Data Analyst with experience in healthcare analytics, ETL pipelines and applied machine learning.
 
 [GitHub](https://github.com/mlikhitha33-ship-it)
