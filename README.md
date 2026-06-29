@@ -26,7 +26,7 @@ Battery storage operators in ERCOT use a strategy called **price arbitrage**:
 - **Discharge and sell** when prices are high, typically during the evening peak between 5-8pm ($50-80/MWh)
 - Profit is the spread between those two prices minus operating costs
 
-Getting the timing right matters. Missing the evening ramp by two hours is the difference between a good day and a bad one. That is the forecasting problem this project works on.
+Getting the timing right matters. Missing the evening ramp by two hours is the difference between a good day and a bad one. That is what this project works on.
 
 ---
 
@@ -95,13 +95,13 @@ PRICE DISTRIBUTION
   Above $200            :  1,071 hours (1.6%)
 ```
 
-A few things stood out from these numbers.
+Three things stood out.
 
 **Hour of day matters more than expected.** Prices sit around $17/MWh between 2-4am and climb to $37-39/MWh between 5-7pm. That is more than a 2x swing within a single day, which makes hour-of-day one of the most important features in the model.
 
 **August is consistently the most expensive month.** June through September are all elevated from air conditioning load, but August median prices hit nearly $30/MWh compared to $17-22/MWh in winter. A model without seasonal features would struggle badly on summer data.
 
-**The market runs in two modes.** 85.4% of hours sit below $50/MWh — the routine market, predictable and weekly-patterned. The other 14.6% are elevated or spike hours, more concentrated in 2022 and 2023. The regime chart below makes this visible. Any model has to deal with both modes and they behave very differently.
+**The market runs in two modes.** 85.4% of hours sit below $50/MWh — the routine market, predictable and consistent week to week. The other 14.6% are elevated or spike hours, more concentrated in 2022 and 2023. The regime chart below makes this visible. Any model has to deal with both modes and they behave very differently.
 
 ![ERCOT EDA](ercot_eda.png)
 
@@ -123,7 +123,7 @@ Eight hours are missing across 7.5 years — the DST spring-forward hours where 
 
 **Negative prices**
 
-69 hours have negative prices, the lowest at -$6.00/MWh. These were kept. They are real market events and removing them would teach the model that prices never go negative, which is not true.
+69 hours have negative prices, the lowest being -$6.00/MWh. These were kept. They are real market events and removing them would teach the model that prices never go negative, which is not true.
 
 **The URI spike**
 
@@ -137,7 +137,7 @@ ERCOT publishes prices using an hour-ending convention — "Hour Ending 01:00" m
 
 ## Modeling
 
-SARIMA was the first model tried. It is a classical statistical model that works well on smooth, seasonal time series — monthly retail sales, airline passenger counts and similar. ERCOT prices are a different problem. The weekly rhythm is consistent but the same dataset also has hours where prices jump from $25 to $500 within a single day. SARIMA fits one set of linear parameters to the entire series and when spikes are present those parameters get pulled toward the extremes. The result was a 2023 forecast that consistently ran $30-40/MWh above actual prices regardless of how the URI spike was handled in training. SARIMA was dropped.
+SARIMA was the first model tried. It is a classical statistical model that works well on smooth, seasonal time series — monthly retail sales, airline passenger counts and similar. ERCOT prices are a different problem. The weekly rhythm is consistent but the same dataset also has hours where prices jump from $25 to $500 within a single day. SARIMA fits parameters to the entire series and when spikes are present those parameters get pulled toward the extremes. The result was a 2023 forecast that consistently ran $30-40/MWh above actual prices regardless of how the URI spike was handled in training. SARIMA was dropped.
 
 ---
 
@@ -155,7 +155,7 @@ It follows the weekly rhythm well and stays in the right price range. Where it m
 
 ### Model 2: LSTM (PyTorch)
 
-An LSTM (Long Short-Term Memory network) is a recurrent neural network built for sequential data. The naive baseline already handles the weekly pattern reasonably well. What it cannot do is respond to current conditions — if prices have been climbing for three days, or a heat wave is building, or the last 48 hours look nothing like the same period last week, the naive baseline has no way to know. The LSTM sees 48 hours of recent price history and rolling statistics, giving it the context to detect when this week is shaping up differently from last week. That is where the value should come from.
+An LSTM (Long Short-Term Memory network) is a recurrent neural network built for sequential data. The naive baseline copies last week — it works for routine hours but has no awareness of what is happening right now. If prices have been climbing for three days, or a heat wave is building, or the last 48 hours look nothing like the same period last week, the naive baseline cannot respond. The LSTM sees 48 hours of recent price history and rolling statistics, giving it the context to detect when this week is shaping up differently from last week. That is where the value should come from.
 
 **Architecture:**
 ```
@@ -192,11 +192,11 @@ On cyclical encoding: hour of day is encoded using sine and cosine rather than r
 
 ### What each metric measures
 
-**MAE (Mean Absolute Error)** is the average absolute difference between predicted and actual prices across all test hours. If the model predicts $40/MWh and actual is $55/MWh, that hour contributes $15. Every hour is weighted equally. On a typical hour, how far off is the forecast?
+**MAE (Mean Absolute Error)** is the average absolute difference between predicted and actual prices across all test hours. If the model predicts $40/MWh and actual is $55/MWh, that hour contributes $15. Every hour is weighted equally — a $15 error on a cheap hour counts the same as a $15 error during a price spike.
 
-**RMSE (Root Mean Squared Error)** squares each error before averaging then takes the square root. Large errors are penalized much more than small ones. A $500 error contributes 25 times more to RMSE than a $100 error. When the model is wrong by a lot, how wrong does it get?
+**RMSE (Root Mean Squared Error)** squares each error before averaging then takes the square root. Large errors are penalized much more heavily than small ones. A $500 error contributes 25 times more to RMSE than a $100 error. It tells you how badly the model performs when it is really wrong.
 
-**MAPE (Mean Absolute Percentage Error)** expresses errors as a percentage of actual price. A $10 error on a $20/MWh hour is 50%; the same $10 error on a $100/MWh hour is 10%. How large are the errors relative to the price level?
+**MAPE (Mean Absolute Percentage Error)** expresses errors as a percentage of the actual price. A $10 error on a $20/MWh hour is 50%; the same $10 error on a $100/MWh hour is 10%. It puts errors in context of the price level.
 
 ### Reading the numbers
 
@@ -204,13 +204,13 @@ The naive baseline won on every metric. MAE of $5.81 vs the LSTM's $25.53, RMSE 
 
 At first glance this looks like the LSTM failed. But looking closer, the reasons make sense.
 
-The naive baseline is essentially a hand-crafted feature — same hour last week — that perfectly matches the dominant signal in this data. ERCOT weekly patterns are so consistent that copying last week gets you surprisingly far. The LSTM has to discover that signal from scratch during training, and we only gave it 10 epochs. That is not enough time to converge on a dataset this size.
+The naive baseline is essentially a hand-crafted feature (same hour last week) that perfectly matches the dominant signal in this data. ERCOT weekly patterns are so consistent that copying last week gets you surprisingly far. The LSTM has to discover that signal from scratch during training, and we only gave it 10 epochs. That is not enough time to converge on a dataset this size.
 
-The lookback window is the other problem. We set it to 48 hours to keep training fast. But the strongest predictive signal — same hour last week — sits 168 hours back. The LSTM literally cannot see far enough to learn what the naive baseline uses by design. It is like asking someone to predict Friday's weather but only showing them Wednesday and Thursday.
+The lookback window is the other problem. We set it to 48 hours to keep training fast. But the strongest predictive signal is same-hour-last-week, which sits 168 hours back. The LSTM literally cannot see far enough to learn what the naive baseline uses by design. It is like asking someone to predict Friday's weather but only showing them Wednesday and Thursday.
 
 The RMSE gap tells the spike story. One bad prediction on a $500/MWh hour can swing RMSE more than a hundred good predictions on routine hours. The naive baseline handles spikes better by accident — if last week had a spike at the same time, it copies it. The LSTM has no such luck.
 
-None of this means LSTM is the wrong approach. It means this specific setup — 10 epochs, 48-hour lookback, no external features — was not enough to beat a strong baseline. The next section covers what would actually change that.
+None of this means the LSTM is the wrong approach. It means this specific setup needs more: more epochs, a longer lookback window and external market features. The next section covers what would actually change that.
 
 ### Training curve
 
@@ -228,15 +228,15 @@ Errors are not uniform across the 24-hour forecast window. Hours 6, 8 and 20 hav
 
 ![LSTM Forecasts](lstm_24h_forecasts.png)
 
-The forecast tracks the general shape of the day — it picks up peaks and valleys — but runs consistently above actual prices. That upward bias points to the training data containing higher average prices (2019-2023 included elevated 2022-2023 periods) relative to the test set (2025-2026). The model learned a price level that does not match where the market settled in the test years.
+The forecast tracks the general shape of the day — it picks up peaks and valleys — but runs consistently above actual prices. This upward bias comes from the training period (2019-2023) containing higher average prices, particularly the elevated 2022-2023 years, relative to the test set (2025-2026). The model learned a price level that does not match where the market settled in the test years.
 
 ---
 
 ## Tuning and Next Steps
 
-The immediate levers are training longer (30+ epochs), extending the lookback window to 168 hours so the model can actually see same-hour-last-week, and adding external features — ERCOT load forecasts, wind generation and natural gas futures. These three changes alone would likely close most of the gap against the naive baseline.
+The immediate levers are training longer (30+ epochs), extending the lookback window to 168 hours so the model can actually see same-hour-last-week and adding external features: ERCOT load forecasts, wind generation and natural gas futures. These three changes alone would likely close most of the gap against the naive baseline.
 
-Beyond that: a two-stage model that handles spike hours separately from routine hours, quantile regression for prediction intervals instead of point forecasts, and rolling walk-forward cross-validation to get a more reliable read on how the model generalizes across different market conditions.
+Beyond that: a two-stage model that handles spike hours separately from routine hours, quantile regression for prediction intervals instead of point forecasts and rolling walk-forward cross-validation to get a more reliable read on how the model generalizes across different market conditions.
 
 ---
 
@@ -315,11 +315,3 @@ Image('lstm_24h_forecasts.png') # after 5_lstm.py
 Each script saves output back to your Drive folder so results persist between sessions.
 
 ---
-
-## About
-
-**Likhitha Pavani**
-MS Information Science, University of North Texas (2025)
-Data Analyst with experience in healthcare analytics, ETL pipelines and applied machine learning.
-
-[GitHub](https://github.com/mlikhitha33-ship-it)
