@@ -172,11 +172,10 @@ Parameters: 218,712
 - Cyclical time encoding: sin/cos for hour, month, day-of-week
 - Calendar: is_weekend
 
-
-- The most recent hours (1h, 2h, 3h) capture short term momentum. If prices have been climbing for the last three hours, that trend likely continues into the next hour. 
-- The 6h and 12h lags capture within day patterns — morning pricing affects afternoon pricing. 
-- The 24h lag captures same-hour yesterday, which is strong because daily routines repeat. The 48h lag adds the day before that. 
-- The 168h lag — same hour last week is the single most important feature in this dataset because ERCOT weekly demand patterns are so consistent. Tuesday 6pm this week looks a lot like Tuesday 6pm last week.
+The most recent hours (1h, 2h, 3h) capture short term momentum. If prices have been climbing for the last three hours, that trend likely continues into the next hour. 
+The 6h and 12h lags capture within day patterns — morning pricing affects afternoon pricing. 
+The 24h lag captures same-hour yesterday, which is strong because daily routines repeat. The 48h lag adds the day before that. 
+The 168h lag — same hour last week is the single most important feature in this dataset because ERCOT weekly demand patterns are so consistent. Tuesday 6pm this week looks a lot like Tuesday 6pm last week.
 
 
 On cyclical encoding: hour of day is encoded using sine and cosine rather than raw integers. Hour 23 and hour 0 are adjacent in real life but 23 apart numerically. Sin/cos wraps the cycle so the model treats them as neighbors.
