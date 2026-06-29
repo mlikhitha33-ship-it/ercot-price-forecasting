@@ -137,7 +137,7 @@ ERCOT publishes prices using an hour-ending convention — "Hour Ending 01:00" m
 
 ## Modeling
 
-SARIMA was the first model tried. It is a classical statistical model that works well on smooth, seasonal time series — monthly retail sales, airline passenger counts and similar. ERCOT prices are a different problem. The weekly rhythm is consistent but the same dataset also has hours where prices jump from $25 to $500 within a single day. SARIMA fits parameters to the entire series and when spikes are present those parameters get pulled toward the extremes. The result was a 2023 forecast that consistently ran $30-40/MWh above actual prices regardless of how the URI spike was handled in training. SARIMA was dropped.
+SARIMA was the first model tried. It is a classical statistical model that works well on smooth, seasonal time series — monthly retail sales, airline passenger counts and similar. ERCOT prices are a different problem. The weekly rhythm is consistent but the same dataset also has hours where prices jump from $25 to $500 within a single day. SARIMA fits parameters to the entire series and when spikes are present those parameters get pulled toward the extremes. The result was a 2023 forecast that consistently ran $30-40/MWh above actual prices regardless of how the URI spike was handled in training. Hence, SARIMA was dropped.
 
 ---
 
@@ -149,7 +149,7 @@ The chart below shows how this forecast tracked actual 2023 prices.
 
 ![Baseline Forecast](baseline_forecast.png)
 
-It follows the weekly rhythm well and stays in the right price range. Where it misses — sudden spikes — is expected. It has no awareness of current market conditions, only what happened last week.
+It follows the weekly rhythm well and stays in the right price range. Where it misses , sudden spikes is expected. It has no awareness of current market conditions, only what happened last week.
 
 ---
 
