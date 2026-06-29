@@ -119,7 +119,7 @@ ERCOT marks DST fall back hours with a "Repeated Hour Flag." Eight duplicate row
 
 **Missing hours**
 
-Eight hours are missing across 7.5 years - The DST spring-forward hours where clocks skip from 2am to 3am. The hour does not exist in the market so no imputation was done.
+Eight hours are missing across 7.5 years - The DST spring forward hours where clocks skip from 2am to 3am. The hour does not exist in the market so no imputation was done.
 
 **Negative prices**
 
@@ -127,7 +127,7 @@ Eight hours are missing across 7.5 years - The DST spring-forward hours where cl
 
 **The URI spike**
 
-The February 2021 URI storm produced 460+ hours above $500/MWh. These were kept but handled carefully. For the LSTM, prices were winsorized at the 99.9th percentile ($7,556/MWh) before scaling. This is not removing the spike - it stops MinMaxScaler from compressing all normal range prices into a band so narrow the model cannot distinguish between a $20 hour and a $60 hour.
+The February 2021 URI storm produced 460+ hours above $500/MWh. These were kept but handled carefully. For the LSTM, prices were winsorized at the 99.9th percentile ($7,556/MWh) before scaling. This is not removing the spike . It stops MinMaxScaler from compressing all normal range prices into a band so narrow the model cannot distinguish between a $20 hour and a $60 hour.
 
 **Timestamp conversion**
 
