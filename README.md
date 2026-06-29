@@ -111,7 +111,7 @@ Three things stood out.
 
 **Filtering to one settlement point**
 
-The raw ERCOT files contain 15 rows per hour — one price per settlement point. Loading all of them would mix 15 different price series together. HB_NORTH (North Hub) covers the Dallas/Fort Worth region and is the most widely referenced benchmark in ERCOT trading. Filtering to HB_NORTH brought the dataset from nearly a million rows down to 65,464 — one row per hour.
+The raw ERCOT files contain 15 rows per hour , one price per settlement point. Loading all of them would mix 15 different price series together. HB_NORTH (North Hub) covers the Dallas/Fort Worth region and is the most widely referenced benchmark in ERCOT trading. Filtering to HB_NORTH brought the dataset from nearly a million rows down to 65,464 — one row per hour.
 
 **Duplicate hours**
 
@@ -131,13 +131,13 @@ The February 2021 URI storm produced 460+ hours above $500/MWh. These were kept 
 
 **Timestamp conversion**
 
-ERCOT publishes prices using an hour-ending convention — "Hour Ending 01:00" means the hour from midnight to 1am. All timestamps were converted to hour-starting by subtracting one hour, which is the standard convention for time series modeling.
+ERCOT publishes prices using an hour-ending convention - "Hour Ending 01:00" means the hour from midnight to 1am. All timestamps were converted to hour-starting by subtracting one hour, which is the standard convention for time series modeling.
 
 ---
 
 ## Modeling
 
-SARIMA was the first model tried. It is a classical statistical model that works well on smooth, seasonal time series — monthly retail sales, airline passenger counts and similar. ERCOT prices are a different problem. The weekly rhythm is consistent but the same dataset also has hours where prices jump from $25 to $500 within a single day. SARIMA fits parameters to the entire series and when spikes are present those parameters get pulled toward the extremes. The result was a 2023 forecast that consistently ran $30-40/MWh above actual prices regardless of how the URI spike was handled in training. Hence, SARIMA was dropped.
+SARIMA was the first model tried. It is a classical statistical model that works well on smooth, seasonal time series , monthly retail sales, airline passenger counts and similar. ERCOT prices are a different problem. The weekly rhythm is consistent but the same dataset also has hours where prices jump from $25 to $500 within a single day. SARIMA fits parameters to the entire series and when spikes are present those parameters get pulled toward the extremes. The result was a 2023 forecast that consistently ran $30-40/MWh above actual prices regardless of how the URI spike was handled in training. Hence, SARIMA was dropped.
 
 ---
 
@@ -155,7 +155,7 @@ It follows the weekly rhythm well and stays in the right price range. Where it m
 
 ### Model 2: LSTM (PyTorch)
 
-An LSTM (Long Short-Term Memory network) is a recurrent neural network built for sequential data. The naive baseline copies last week — it works for routine hours but has no awareness of what is happening right now. If prices have been climbing for three days, or a heat wave is building, or the last 48 hours look nothing like the same period last week, the naive baseline cannot respond. The LSTM sees 48 hours of recent price history and rolling statistics, giving it the context to detect when this week is shaping up differently from last week. That is where the value should come from.
+An LSTM (Long Short-Term Memory network) is a recurrent neural network built for sequential data. The naive baseline copies last week - it works for routine hours but has no awareness of what is happening right now. If prices have been climbing for three days, or a heat wave is building, or the last 48 hours look nothing like the same period last week, the naive baseline cannot respond. The LSTM sees 48 hours of recent price history and rolling statistics, giving it the context to detect when this week is shaping up differently from last week. That is where the value should come from.
 
 **Architecture:**
 ```
@@ -277,7 +277,7 @@ Errors are not uniform across the 24 hour forecast window. Hours 6, 8 and 20 hav
 
 ![LSTM Forecasts](lstm_24h_forecasts.png)
 
-The forecast tracks the general shape of the day - It picks up peaks and valleys but runs consistently above actual prices. This upward bias comes from the training period (2019-2023) containing higher average prices, particularly the elevated 2022-2023 years, relative to the test set (2025-2026). The model learned a price level that does not match where the market settled in the test years.
+The forecast tracks the general shape of the day . It picks up peaks and valleys but runs consistently above actual prices. This upward bias comes from the training period (2019-2023) containing higher average prices, particularly the elevated 2022-2023 years, relative to the test set (2025-2026). The model learned a price level that does not match where the market settled in the test years.
 
 ---
 
