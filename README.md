@@ -97,7 +97,7 @@ PRICE DISTRIBUTION
 
 Three things stood out.
 
-**Hour of day matters more than expected.** Prices sit around $17/MWh between 2-4am and climb to $37-39/MWh between 5-7pm. That is more than a 2x swing within a single day, which makes hour-of-day one of the most important features in the model.
+**Hour of day matters more than expected.** Prices sit around $17/MWh between 2-4am and climb to $37-39/MWh between 5-7 pm. That is more than a 2x swing within a single day, which makes hour of the day one of the most important features in the model.
 
 **August is consistently the most expensive month.** June through September are all elevated from air conditioning load, but August median prices hit nearly $30/MWh compared to $17-22/MWh in winter. A model without seasonal features would struggle badly on summer data.
 
@@ -111,11 +111,11 @@ Three things stood out.
 
 **Filtering to one settlement point**
 
-The raw ERCOT files contain 15 rows per hour , one price per settlement point. Loading all of them would mix 15 different price series together. HB_NORTH (North Hub) covers the Dallas/Fort Worth region and is the most widely referenced benchmark in ERCOT trading. Filtering to HB_NORTH brought the dataset from nearly a million rows down to 65,464 — one row per hour.
+The raw ERCOT files contain 15 rows per hour , one price per settlement point. Loading all of them would mix 15 different price series together. HB_NORTH (North Hub) covers the Dallas/Fort Worth region and is the most widely referenced benchmark in ERCOT trading. Filtering to HB_NORTH brought the dataset from nearly a million rows down to 65,464 - one row per hour.
 
 **Duplicate hours**
 
-ERCOT marks DST fall-back hours with a "Repeated Hour Flag." Eight duplicate rows were dropped across the full dataset, one per year where clocks fall back.
+ERCOT marks DST fall back hours with a "Repeated Hour Flag." Eight duplicate rows were dropped across the full dataset, one per year where clocks fall back.
 
 **Missing hours**
 
@@ -127,11 +127,11 @@ Eight hours are missing across 7.5 years - The DST spring-forward hours where cl
 
 **The URI spike**
 
-The February 2021 URI storm produced 460+ hours above $500/MWh. These were kept but handled carefully. For the LSTM, prices were winsorized at the 99.9th percentile ($7,556/MWh) before scaling. This is not removing the spike — it stops MinMaxScaler from compressing all normal-range prices into a band so narrow the model cannot distinguish between a $20 hour and a $60 hour.
+The February 2021 URI storm produced 460+ hours above $500/MWh. These were kept but handled carefully. For the LSTM, prices were winsorized at the 99.9th percentile ($7,556/MWh) before scaling. This is not removing the spike - it stops MinMaxScaler from compressing all normal range prices into a band so narrow the model cannot distinguish between a $20 hour and a $60 hour.
 
 **Timestamp conversion**
 
-ERCOT publishes prices using an hour-ending convention - "Hour Ending 01:00" means the hour from midnight to 1am. All timestamps were converted to hour-starting by subtracting one hour, which is the standard convention for time series modeling.
+ERCOT publishes prices using an hour-ending convention - "Hour Ending 01:00" means the hour from midnight to 1am. All timestamps were converted to hour starting by subtracting one hour, which is the standard convention for time series modeling.
 
 ---
 
@@ -225,7 +225,7 @@ All four use a one-step shift so the calculation only uses data available before
 
 **Training choices:**
 - **Huber loss** instead of MSE. With a $8,999/MWh spike in the training data, MSE would pull the model heavily toward predicting extremes.
-- **Winsorized prices** at the 99.9th percentile before scaling. Without this, MinMaxScaler compresses normal-range prices into a very narrow band near zero.
+- **Winsorized prices** at the 99.9th percentile before scaling. Without this, MinMaxScaler compresses normal range prices into a very narrow band near zero.
 - **Chronological split**: 2019-2023 train, 2024 validation, 2025-2026 test. Time series data cannot be randomly shuffled without leaking future information into training.
 - **Gradient clipping** at max_norm=1.0 to stabilize training on a volatile series.
 
@@ -283,7 +283,7 @@ The forecast tracks the general shape of the day . It picks up peaks and valleys
 
 **What is missing**
 
-All 20 features are backward-looking: price history and time. Electricity prices are driven by current supply and demand conditions — ERCOT system load forecasts, wind and solar generation, natural gas spot prices and temperature. None of that is in this model. Adding even one external feature like the hourly ERCOT load forecast would likely improve accuracy more than any architectural change to the LSTM.
+All 20 features are backward-looking: price history and time. Electricity prices are driven by current supply and demand conditions - ERCOT system load forecasts, wind and solar generation, natural gas spot prices and temperature. None of that is in this model. Adding even one external feature like the hourly ERCOT load forecast would likely improve accuracy more than any architectural change to the LSTM.
 
 On cyclical encoding: hour of day is encoded using sine and cosine rather than raw integers. Hour 23 and hour 0 are adjacent in real life but 23 apart numerically. Sin/cos wraps the cycle so the model treats them as neighbors.
 
