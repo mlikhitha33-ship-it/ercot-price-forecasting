@@ -50,11 +50,13 @@ These are not anomalies to remove. They are the hours that matter most to storag
 
 I spent time looking at the data before writing a single line of model code. Three patterns came up consistently.
 
-**Hour of day matters a lot.** Prices are lowest between midnight and 5am when industrial demand falls and wind generation is typically high. They climb during morning ramp (7-9am) and again during the evening peak (5-8pm). Hour-of-day had to be a feature.
+**Hour of day matters a lot.** The median price chart shows prices are lowest between hours 2-4 (roughly $17/MWh) and peak sharply between hours 17-19 (5-7pm, reaching $37-39/MWh). That is more than a 2x difference between the cheapest and most expensive hours of the day. Hour-of-day had to be a feature.
 
-**Texas summers push prices up persistently.** June through September show higher median prices driven by air conditioning load. A model trained only on winter data would not generalize well to summer months.
+**August is the most expensive month.** June through September are elevated relative to the rest of the year, driven by air conditioning load. But August stands out clearly — median prices hit nearly $30/MWh compared to around $17-22/MWh in winter months. A model trained only on winter data would underestimate summer pricing significantly.
 
-**The price distribution has a long right tail.** Most hours sit between $20-$60/MWh but spike events pull the distribution hard to the right. Standard loss functions like MSE get pulled toward predicting these extremes, which creates problems during training.
+**The price distribution is concentrated below $50/MWh with a long right tail.** The median price across the full dataset is $23.8/MWh and the bulk of hours cluster between $10-$50/MWh. The histogram shows a sharp drop-off after $50, but the distribution extends far to the right from spike events. Standard loss functions like MSE get pulled toward those extremes during training, which is why we used Huber loss instead.
+
+![ERCOT EDA](ercot_eda.png)
 
 ---
 
@@ -218,7 +220,6 @@ Image('lstm_24h_forecasts.png') # after 5_lstm.py
 Each script saves its output as a CSV or PNG back to your Drive folder so results persist between sessions.
 
 ---
-
 
 
 [GitHub](https://github.com/mlikhitha33-ship-it)
