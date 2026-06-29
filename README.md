@@ -222,7 +222,7 @@ The train loss is still declining at epoch 10 and has not flattened out. That is
 
 ![Horizon MAE](lstm_horizon_mae.png)
 
-Errors are not uniform across the 24-hour forecast window. Hours 6, 8 and 20 have noticeably higher MAE than surrounding hours. Those correspond to the morning ramp (6-8am) and evening peak (8pm) — exactly when prices are moving fastest. The model struggles most at the transitions, which makes sense. Flat overnight prices are easier to predict than a sharp climb into peak demand.
+Errors are not uniform across the 24 hour forecast window. Hours 6, 8 and 20 have noticeably higher MAE than surrounding hours. Those correspond to the morning ramp (6-8am) and evening peak (8pm) — exactly when prices are moving fastest. The model struggles most at the transitions, which makes sense. Flat overnight prices are easier to predict than a sharp climb into peak demand.
 
 ### Sample forecasts vs actual
 
@@ -234,7 +234,7 @@ The forecast tracks the general shape of the day - It picks up peaks and valleys
 
 ## Tuning and Next Steps
 
-The immediate levers are training longer (30+ epochs), extending the lookback window to 168 hours so the model can actually see same-hour-last-week and adding external features: ERCOT load forecasts, wind generation and natural gas futures. These three changes alone would likely close most of the gap against the naive baseline.
+The immediate levers are training longer (30+ epochs), extending the lookback window to 168 hours so the model can actually see same-hour-last week and adding external features: ERCOT load forecasts, wind generation and natural gas futures. These three changes alone would likely close most of the gap against the naive baseline.
 
 Beyond that: a two-stage model that handles spike hours separately from routine hours, quantile regression for prediction intervals instead of point forecasts and rolling walk-forward cross-validation to get a more reliable read on how the model generalizes across different market conditions.
 
