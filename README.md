@@ -222,11 +222,6 @@ All four use a one-step shift so the calculation only uses data available before
 
 ---
 
-**What is missing**
-
-All 20 features are backward-looking: price history and time. Electricity prices are driven by current supply and demand conditions — ERCOT system load forecasts, wind and solar generation, natural gas spot prices and temperature. None of that is in this model. Adding even one external feature like the hourly ERCOT load forecast would likely improve accuracy more than any architectural change to the LSTM.
-
-On cyclical encoding: hour of day is encoded using sine and cosine rather than raw integers. Hour 23 and hour 0 are adjacent in real life but 23 apart numerically. Sin/cos wraps the cycle so the model treats them as neighbors.
 
 **Training choices:**
 - **Huber loss** instead of MSE. With a $8,999/MWh spike in the training data, MSE would pull the model heavily toward predicting extremes.
@@ -285,6 +280,12 @@ Errors are not uniform across the 24 hour forecast window. Hours 6, 8 and 20 hav
 The forecast tracks the general shape of the day - It picks up peaks and valleys but runs consistently above actual prices. This upward bias comes from the training period (2019-2023) containing higher average prices, particularly the elevated 2022-2023 years, relative to the test set (2025-2026). The model learned a price level that does not match where the market settled in the test years.
 
 ---
+
+**What is missing**
+
+All 20 features are backward-looking: price history and time. Electricity prices are driven by current supply and demand conditions — ERCOT system load forecasts, wind and solar generation, natural gas spot prices and temperature. None of that is in this model. Adding even one external feature like the hourly ERCOT load forecast would likely improve accuracy more than any architectural change to the LSTM.
+
+On cyclical encoding: hour of day is encoded using sine and cosine rather than raw integers. Hour 23 and hour 0 are adjacent in real life but 23 apart numerically. Sin/cos wraps the cycle so the model treats them as neighbors.
 
 ## Tuning and Next Steps
 
