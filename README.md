@@ -222,13 +222,13 @@ The train loss is still declining at epoch 10 and has not flattened out. That is
 
 ![Horizon MAE](lstm_horizon_mae.png)
 
-Errors are not uniform across the 24 hour forecast window. Hours 6, 8 and 20 have noticeably higher MAE than surrounding hours. Those correspond to the morning ramp (6-8am) and evening peak (8pm) — exactly when prices are moving fastest. The model struggles most at the transitions, which makes sense. Flat overnight prices are easier to predict than a sharp climb into peak demand.
+Errors are not uniform across the 24 hour forecast window. Hours 6, 8 and 20 have noticeably higher MAE than surrounding hours. Those correspond to the morning ramp (6-8am) and evening peak (8pm) exactly when prices are moving fastest. The model struggles most at the transitions, which makes sense. Flat overnight prices are easier to predict than a sharp climb into peak demand.
 
 ### Sample forecasts vs actual
 
 ![LSTM Forecasts](lstm_24h_forecasts.png)
 
-The forecast tracks the general shape of the day - It picks up peaks and valleys — but runs consistently above actual prices. This upward bias comes from the training period (2019-2023) containing higher average prices, particularly the elevated 2022-2023 years, relative to the test set (2025-2026). The model learned a price level that does not match where the market settled in the test years.
+The forecast tracks the general shape of the day - It picks up peaks and valleys but runs consistently above actual prices. This upward bias comes from the training period (2019-2023) containing higher average prices, particularly the elevated 2022-2023 years, relative to the test set (2025-2026). The model learned a price level that does not match where the market settled in the test years.
 
 ---
 
