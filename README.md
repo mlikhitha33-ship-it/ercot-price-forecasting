@@ -155,7 +155,7 @@ It follows the weekly rhythm well and stays in the right price range. Where it m
 
 ### Model 2: LSTM (PyTorch)
 
-An LSTM (Long Short-Term Memory network) is a recurrent neural network built for sequential data. It learns non-linear relationships across long time windows — something SARIMA cannot do. Tuesday evening prices this week often look a lot like Tuesday evening prices last week, and LSTMs are designed to pick up on exactly that kind of pattern.
+An LSTM (Long Short-Term Memory network) is a recurrent neural network built for sequential data. The naive baseline already handles the weekly pattern reasonably well. What it cannot do is respond to current conditions — if prices have been climbing for three days, or a heat wave is building, or the last 48 hours look nothing like the same period last week, the naive baseline has no way to know. The LSTM sees 48 hours of recent price history and rolling statistics, giving it the context to detect when this week is shaping up differently from last week. That is where the value should come from.
 
 **Architecture:**
 ```
@@ -202,21 +202,41 @@ On cyclical encoding: hour of day is encoded using sine and cosine rather than r
 
 The naive baseline won on every metric. MAE of $5.81 vs the LSTM's $25.53, RMSE of $8.92 vs $70.13.
 
-The naive baseline works well here because ERCOT weekly patterns are strong — the same day last week is a genuinely good predictor for most hours. The LSTM trained on 10 epochs with a 48-hour lookback could not beat that. The RMSE being nearly 8 times higher points to the spike problem — the LSTM makes large errors on high-price hours while the naive forecast, anchored to last week, misses them in a more contained way.
+At first glance this looks like the LSTM failed. But looking closer, the reasons make sense.
 
-The LSTM needs more work before it adds value over a simple baseline. The next section covers what that looks like.
+The naive baseline is essentially a hand-crafted feature — same hour last week — that perfectly matches the dominant signal in this data. ERCOT weekly patterns are so consistent that copying last week gets you surprisingly far. The LSTM has to discover that signal from scratch during training, and we only gave it 10 epochs. That is not enough time to converge on a dataset this size.
+
+The lookback window is the other problem. We set it to 48 hours to keep training fast. But the strongest predictive signal — same hour last week — sits 168 hours back. The LSTM literally cannot see far enough to learn what the naive baseline uses by design. It is like asking someone to predict Friday's weather but only showing them Wednesday and Thursday.
+
+The RMSE gap tells the spike story. One bad prediction on a $500/MWh hour can swing RMSE more than a hundred good predictions on routine hours. The naive baseline handles spikes better by accident — if last week had a spike at the same time, it copies it. The LSTM has no such luck.
+
+None of this means LSTM is the wrong approach. It means this specific setup — 10 epochs, 48-hour lookback, no external features — was not enough to beat a strong baseline. The next section covers what would actually change that.
+
+### Training curve
+
+![LSTM Training Curve](lstm_training_curve.png)
+
+The train loss is still declining at epoch 10 and has not flattened out. That is the clearest sign that 10 epochs was not enough — the model was still learning when we stopped. A properly trained LSTM would show both lines converging and leveling off.
+
+### Forecast error by horizon
+
+![Horizon MAE](lstm_horizon_mae.png)
+
+Errors are not uniform across the 24-hour forecast window. Hours 6, 8 and 20 have noticeably higher MAE than surrounding hours. Those correspond to the morning ramp (6-8am) and evening peak (8pm) — exactly when prices are moving fastest. The model struggles most at the transitions, which makes sense. Flat overnight prices are easier to predict than a sharp climb into peak demand.
+
+### Sample forecasts vs actual
+
+![LSTM Forecasts](lstm_24h_forecasts.png)
+
+The forecast tracks the general shape of the day — it picks up peaks and valleys — but runs consistently above actual prices. That upward bias points to the training data containing higher average prices (2019-2023 included elevated 2022-2023 periods) relative to the test set (2025-2026). The model learned a price level that does not match where the market settled in the test years.
 
 ---
 
-## What I'd Do Differently
+## Tuning and Next Steps
 
-**Build a two-stage model for spikes.** One model trying to handle both $25/MWh routine hours and $8,999/MWh crisis hours is doing two different jobs. A spike classifier followed by a separate price regressor for each regime would likely close most of the RMSE gap.
+The immediate levers are training longer (30+ epochs), extending the lookback window to 168 hours so the model can actually see same-hour-last-week, and adding external features — ERCOT load forecasts, wind generation and natural gas futures. These three changes alone would likely close most of the gap against the naive baseline.
 
-**Add external market features.** This model only sees historical prices and time. Prices are driven by supply-demand fundamentals: wind generation, ERCOT load forecasts, natural gas futures. Adding those would likely improve accuracy more than any architecture change.
-
-**Prediction intervals instead of point forecasts.** A storage operator needs to know not just what the price will be but how confident the model is. Quantile regression or Monte Carlo Dropout would give prediction intervals that support better risk-adjusted dispatch decisions.
-
-**Walk-forward cross-validation.** A single train/test split reflects performance in one time window. Rolling walk-forward validation across multiple periods gives a more reliable picture of how the model holds up across different market conditions.
+Beyond that: a two-stage model that handles spike hours separately from routine hours, quantile regression for prediction intervals instead of point forecasts, and rolling walk-forward cross-validation to get a more reliable read on how the model generalizes across different market conditions.
 
 ---
 
@@ -296,3 +316,10 @@ Each script saves output back to your Drive folder so results persist between se
 
 ---
 
+## About
+
+**Likhitha Pavani**
+MS Information Science, University of North Texas (2025)
+Data Analyst with experience in healthcare analytics, ETL pipelines and applied machine learning.
+
+[GitHub](https://github.com/mlikhitha33-ship-it)
