@@ -198,7 +198,7 @@ On cyclical encoding: hour of day is encoded using sine and cosine rather than r
 
 ### What each metric measures
 
-**MAE (Mean Absolute Error)** is the average absolute difference between predicted and actual prices across all test hours. If the model predicts $40/MWh and actual is $55/MWh, that hour contributes $15. Every hour is weighted equally — a $15 error on a cheap hour counts the same as a $15 error during a price spike.
+**MAE (Mean Absolute Error)** is the average absolute difference between predicted and actual prices across all test hours. If the model predicts $40/MWh and actual is $55/MWh, that hour contributes $15. Every hour is weighted equally - A $15 error on a cheap hour counts the same as a $15 error during a price spike.
 
 **RMSE (Root Mean Squared Error)** squares each error before averaging then takes the square root. Large errors are penalized much more heavily than small ones. A $500 error contributes 25 times more to RMSE than a $100 error. It tells you how badly the model performs when it is really wrong.
 
