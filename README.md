@@ -172,11 +172,59 @@ Parameters: 218,712
 - Cyclical time encoding: sin/cos for hour, month, day-of-week
 - Calendar: is_weekend
 
-The most recent hours (1h, 2h, 3h) capture short term momentum. If prices have been climbing for the last three hours, that trend likely continues into the next hour. 
-The 6h and 12h lags capture within day patterns — morning pricing affects afternoon pricing. 
-The 24h lag captures same-hour yesterday, which is strong because daily routines repeat. The 48h lag adds the day before that. 
-The 168h lag — same hour last week is the single most important feature in this dataset because ERCOT weekly demand patterns are so consistent. Tuesday 6pm this week looks a lot like Tuesday 6pm last week.
+**Why these features**
 
+---
+
+**Lagged prices**
+
+| Feature | Why included |
+|---|---|
+| price_lag_1h | Captures immediate momentum. If the last hour was expensive the next hour often is too. |
+| price_lag_2h | Same logic, extends the momentum window slightly. |
+| price_lag_3h | Combined with 1h and 2h, the model gets a short-term trend direction. |
+| price_lag_6h | Captures within-day patterns. Morning pricing influences afternoon pricing. |
+| price_lag_12h | Half-day lookback. Connects overnight pricing to daytime patterns. |
+| price_lag_24h | Same hour yesterday. Daily routines repeat: demand at 6pm today looks like demand at 6pm yesterday. |
+| price_lag_48h | Same hour two days ago. Adds a second data point to confirm or contradict the 24h signal. |
+| price_lag_168h | Same hour last week. The strongest predictive signal in this dataset. ERCOT weekly demand patterns are so consistent that this one feature is what the naive baseline is built on. |
+
+---
+
+**Rolling statistics**
+
+| Feature | Why included |
+|---|---|
+| price_roll_24h_mean | Recent price level. Tells the model whether it is in a high-price or low-price period right now. |
+| price_roll_24h_std | Recent volatility. A high value means the market is choppy. A low value means conditions are stable. |
+| price_roll_7d_mean | Broader price regime over the past week. Smooths out daily noise to show the underlying trend. |
+| price_roll_7d_std | Weekly volatility. Distinguishes a calm week from a turbulent one. |
+
+All four use a one-step shift so the calculation only uses data available before the current hour. Without that shift you are leaking future information into training.
+
+---
+
+**Cyclical time encoding**
+
+| Feature | Why included |
+|---|---|
+| hour_sin, hour_cos | EDA showed a $21.49/MWh gap between the cheapest (3am) and most expensive (7pm) hours. Sin/cos is used instead of raw integers because hour 23 and hour 0 are adjacent in real life but 23 apart numerically. Sin/cos preserves that adjacency. |
+| month_sin, month_cos | EDA showed August running nearly $10/MWh above winter months. Same reason for sin/cos: December and January are adjacent months. |
+| dow_sin, dow_cos | EDA confirmed a weekend pricing pattern. Sin/cos preserves that Sunday and Monday are neighbors. |
+
+---
+
+**Calendar**
+
+| Feature | Why included |
+|---|---|
+| is_weekend | EDA showed a $1.50/MWh weekend discount from lower industrial and commercial demand. Small signal but real and costs one column to include. |
+
+---
+
+**What is missing**
+
+All 20 features are backward-looking: price history and time. Electricity prices are driven by current supply and demand conditions — ERCOT system load forecasts, wind and solar generation, natural gas spot prices and temperature. None of that is in this model. Adding even one external feature like the hourly ERCOT load forecast would likely improve accuracy more than any architectural change to the LSTM.
 
 On cyclical encoding: hour of day is encoded using sine and cosine rather than raw integers. Hour 23 and hour 0 are adjacent in real life but 23 apart numerically. Sin/cos wraps the cycle so the model treats them as neighbors.
 
@@ -214,7 +262,7 @@ The naive baseline is essentially a hand-crafted feature (same hour last week) t
 
 The lookback window is the other problem. We set it to 48 hours to keep training fast. But the strongest predictive signal is same-hour last week, which sits 168 hours back. The LSTM literally cannot see far enough to learn what the naive baseline uses by design. It is like asking someone to predict Friday's weather but only showing them Wednesday and Thursday.
 
-The RMSE gap tells the spike story. One bad prediction on a $500/MWh hour can swing RMSE more than a hundred good predictions on routine hours. The naive baseline handles spikes better by accident — if last week had a spike at the same time, it copies it. The LSTM has no such luck.
+The RMSE gap tells the spike story. One bad prediction on a $500/MWh hour can swing RMSE more than a hundred good predictions on routine hours. The naive baseline handles spikes better by accident , if last week had a spike at the same time, it copies it. The LSTM has no such luck.
 
 None of this means the LSTM is the wrong approach. It means this specific setup needs more: more epochs, a longer lookback window and external market features. The next section covers what would actually change that.
 
@@ -242,7 +290,7 @@ The forecast tracks the general shape of the day - It picks up peaks and valleys
 
 The immediate levers are training longer (30+ epochs), extending the lookback window to 168 hours so the model can actually see same-hour-last week and adding external features: ERCOT load forecasts, wind generation and natural gas futures. These three changes alone would likely close most of the gap against the naive baseline.
 
-Beyond that: a two-stage model that handles spike hours separately from routine hours, quantile regression for prediction intervals instead of point forecasts and rolling walk-forward cross-validation to get a more reliable read on how the model generalizes across different market conditions.
+Beyond that: a two-stage model that handles spike hours separately from routine hours, quantile regression for prediction intervals instead of point forecasts and rolling walk-forward cross validation to get a more reliable read on how the model generalizes across different market conditions.
 
 ---
 
