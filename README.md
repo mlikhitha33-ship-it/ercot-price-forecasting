@@ -119,7 +119,7 @@ ERCOT marks DST fall-back hours with a "Repeated Hour Flag." Eight duplicate row
 
 **Missing hours**
 
-Eight hours are missing across 7.5 years — the DST spring-forward hours where clocks skip from 2am to 3am. The hour does not exist in the market so no imputation was done.
+Eight hours are missing across 7.5 years - The DST spring-forward hours where clocks skip from 2am to 3am. The hour does not exist in the market so no imputation was done.
 
 **Negative prices**
 
@@ -206,7 +206,7 @@ At first glance this looks like the LSTM failed. But looking closer, the reasons
 
 The naive baseline is essentially a hand-crafted feature (same hour last week) that perfectly matches the dominant signal in this data. ERCOT weekly patterns are so consistent that copying last week gets you surprisingly far. The LSTM has to discover that signal from scratch during training, and we only gave it 10 epochs. That is not enough time to converge on a dataset this size.
 
-The lookback window is the other problem. We set it to 48 hours to keep training fast. But the strongest predictive signal is same-hour-last-week, which sits 168 hours back. The LSTM literally cannot see far enough to learn what the naive baseline uses by design. It is like asking someone to predict Friday's weather but only showing them Wednesday and Thursday.
+The lookback window is the other problem. We set it to 48 hours to keep training fast. But the strongest predictive signal is same-hour last week, which sits 168 hours back. The LSTM literally cannot see far enough to learn what the naive baseline uses by design. It is like asking someone to predict Friday's weather but only showing them Wednesday and Thursday.
 
 The RMSE gap tells the spike story. One bad prediction on a $500/MWh hour can swing RMSE more than a hundred good predictions on routine hours. The naive baseline handles spikes better by accident — if last week had a spike at the same time, it copies it. The LSTM has no such luck.
 
@@ -228,7 +228,7 @@ Errors are not uniform across the 24-hour forecast window. Hours 6, 8 and 20 hav
 
 ![LSTM Forecasts](lstm_24h_forecasts.png)
 
-The forecast tracks the general shape of the day — it picks up peaks and valleys — but runs consistently above actual prices. This upward bias comes from the training period (2019-2023) containing higher average prices, particularly the elevated 2022-2023 years, relative to the test set (2025-2026). The model learned a price level that does not match where the market settled in the test years.
+The forecast tracks the general shape of the day - It picks up peaks and valleys — but runs consistently above actual prices. This upward bias comes from the training period (2019-2023) containing higher average prices, particularly the elevated 2022-2023 years, relative to the test set (2025-2026). The model learned a price level that does not match where the market settled in the test years.
 
 ---
 
