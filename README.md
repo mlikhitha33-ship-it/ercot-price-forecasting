@@ -42,7 +42,7 @@ The dataset runs from **January 2019 through June 2026**, 65,464 hourly observat
 
 - **460 hours** where prices exceeded $500/MWh
 - **69 hours** of negative prices. This happens when wind generation is high and demand is low, typically overnight. Wind generators sometimes pay to offload power rather than shut down because federal production tax credits make it profitable even at a negative price. ERCOT's market allows this and it shows up in the data like any other hour.
-- **February 2021**: the URI winter storm pushed prices to **$8,998.99/MWh**, nearly 200 times a typical price
+- **February 2021**: The 2021 winter storm 'Uri' caused an extreme ERCOT price event pushing prices to **$8,998.99/MWh**, nearly 200 times a typical price
 
 Removing these hours would make the modeling problem cleaner but less useful. Storage operators care most about exactly these events.
 
@@ -71,7 +71,7 @@ EXTREME EVENTS
   Negative hours    : 69 (0.11% of all hours)
   Hours above $100  : 2,588 (4.0% of all hours)
   Hours above $500  : 460 (0.7% of all hours)
-  Feb 2021 URI peak : $8,998.99/MWh
+  Feb 2021 Winter storm URI peak : $8,998.99/MWh
 
 MEDIAN PRICE BY HOUR ($/MWh)
   Cheapest hour     : Hour 03:00  $17.38
