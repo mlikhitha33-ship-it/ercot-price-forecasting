@@ -4,7 +4,9 @@
 
 ---
 
-## The Problem
+## Project Snapshot
+
+I built this project to test whether a deep learning model could beat a simple weekly baseline for ERCOT day-ahead electricity prices.
 
 ### What is ERCOT?
 
@@ -127,7 +129,7 @@ Eight hours are missing across 7.5 years - The DST spring forward hours where cl
 
 **The URI spike**
 
-The February 2021 URI storm produced 460+ hours above $500/MWh. These were kept but handled carefully. For the LSTM, prices were winsorized at the 99.9th percentile ($7,556/MWh) before scaling. This is not removing the spike . It stops MinMaxScaler from compressing all normal range prices into a band so narrow the model cannot distinguish between a $20 hour and a $60 hour.
+The February 2021 URI storm produced 460+ hours above $500/MWh. These were kept but handled carefully. For the LSTM, prices were winsorized at the 99.9th percentile ($7,556/MWh) before scaling. This is not removing the spike. It stops MinMaxScaler from compressing all normal range prices into a band so narrow the model cannot distinguish between a $20 hour and a $60 hour.
 
 **Timestamp conversion**
 
@@ -149,13 +151,13 @@ The chart below shows how this forecast tracked actual 2023 prices.
 
 ![Baseline Forecast](baseline_forecast.png)
 
-It follows the weekly rhythm well and stays in the right price range. Where it misses , sudden spikes is expected. It has no awareness of current market conditions, only what happened last week.
+It follows the weekly rhythm well and stays in the right price range. Where it misses, sudden spikes is expected. It has no awareness of current market conditions, only what happened last week.
 
 ---
 
 ### Model 2: LSTM (PyTorch)
 
-An LSTM (Long Short-Term Memory network) is a recurrent neural network built for sequential data. The naive baseline copies last week - it works for routine hours but has no awareness of what is happening right now. If prices have been climbing for three days, or a heat wave is building, or the last 48 hours look nothing like the same period last week, the naive baseline cannot respond. The LSTM sees 48 hours of recent price history and rolling statistics, giving it the context to detect when this week is shaping up differently from last week. That is where the value should come from.
+An LSTM (Long Short-Term Memory network) is a recurrent neural network built for sequential data. The naive baseline copies last week : It works for routine hours but has no awareness of what is happening right now. If prices have been climbing for three days, or a heat wave is building, or the last 48 hours look nothing like the same period last week, the naive baseline cannot respond. The LSTM sees 48 hours of recent price history and rolling statistics, giving it the context to detect when this week is shaping up differently from last week. That is where the value should come from.
 
 **Architecture:**
 ```
@@ -241,11 +243,11 @@ All four use a one-step shift so the calculation only uses data available before
 
 ### What each metric measures
 
-**MAE (Mean Absolute Error)** is the average absolute difference between predicted and actual prices across all test hours. If the model predicts $40/MWh and actual is $55/MWh, that hour contributes $15. Every hour is weighted equally - A $15 error on a cheap hour counts the same as a $15 error during a price spike.
+**MAE (Mean Absolute Error)** is the average absolute difference between predicted and actual prices across all test hours.
 
-**RMSE (Root Mean Squared Error)** squares each error before averaging then takes the square root. Large errors are penalized much more heavily than small ones. A $500 error contributes 25 times more to RMSE than a $100 error. It tells you how badly the model performs when it is really wrong.
+**RMSE (Root Mean Squared Error)** squares each error before averaging then takes the square root. Large errors are penalized much more heavily than small ones which matters during price spikes. It tells you how badly the model performs when it is really wrong.
 
-**MAPE (Mean Absolute Percentage Error)** expresses errors as a percentage of the actual price. A $10 error on a $20/MWh hour is 50%; the same $10 error on a $100/MWh hour is 10%. It puts errors in context of the price level.
+**MAPE (Mean Absolute Percentage Error)** expresses errors as a percentage of the actual price.But it can look extreme when prices are low.
 
 ### Reading the numbers
 
