@@ -265,7 +265,7 @@ On the price_lag_168h feature: it is present in the model's inputs, so the claim
 
 ![LSTM Training Curve](lstm_training_curve.png)
 
-The train loss is still declining at epoch 10 and has not flattened out. That is the clearest sign that 10 epochs was not enough. The model was still learning when we stopped. A properly trained LSTM would show both lines converging and leveling off.
+The training loss is still declining by epoch 10, so more epochs may help. However, validation loss is already fairly flat, so additional training should be monitored with early stopping rather than assuming more epochs will automatically improve test performance.
 
 ### Forecast error by horizon
 
