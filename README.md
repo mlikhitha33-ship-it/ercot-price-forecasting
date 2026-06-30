@@ -289,7 +289,7 @@ On cyclical encoding: hour of day is encoded using sine and cosine rather than r
 
 ## Tuning and Next Steps
 
-The immediate levers are training longer with early stopping, extending the lookback window to 168 hours so the model can directly see same-hour last week patterns, and adding external features such as ERCOT load forecasts, wind generation, and natural gas futures. These changes would likely narrow the gap against the weekly seasonal naive baseline.
+The immediate levers are training longer with early stopping, extending the lookback window to 168 hours so the model can directly see weekly same hour patterns, and adding external features such as ERCOT load forecasts, wind generation and natural gas prices. These changes would likely narrow the gap against the weekly seasonal naive baseline.
 
 Beyond that: a two-stage model that handles spike hours separately from routine hours, quantile regression for prediction intervals instead of point forecasts and rolling walk-forward cross validation to get a more reliable read on how the model generalizes across different market conditions.
 
