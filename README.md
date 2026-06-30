@@ -103,7 +103,7 @@ Three things stood out.
 
 **August is consistently the most expensive month.** June through September are all elevated from air conditioning load, but August median prices hit nearly $30/MWh compared to $17-22/MWh in winter. A model without seasonal features would struggle badly on summer data.
 
-**The market runs in two modes.** 85.4% of hours sit below $50/MWh — the routine market, predictable and consistent week to week. The other 14.6% are elevated or spike hours, more concentrated in 2022 and 2023. The regime chart below makes this visible. Any model has to deal with both modes and they behave very differently.
+**The market runs in two modes.** 85.4% of hours sit below $50/MWh, the routine market, predictable and consistent week to week. The other 14.6% are elevated or spike hours, more concentrated in 2022 and 2023. The regime chart below makes this visible. Any model has to deal with both modes and they behave very differently.
 
 ![ERCOT EDA](ercot_eda.png)
 
@@ -145,7 +145,7 @@ SARIMA was the first model tried. It is a classical statistical model that works
 
 ### Model 1: Seasonal Naive Baseline
 
-Instead of SARIMA, a simpler baseline was used: predict each hour's price as the same hour one week earlier. No training required and it works because ERCOT weekly demand patterns are consistent — Tuesday evening this week looks a lot like Tuesday evening last week.
+Instead of SARIMA, a simpler baseline was used: predict each hour's price as the same hour one week earlier. No training required and it works because ERCOT weekly demand patterns are consistent. Tuesday evening this week looks a lot like Tuesday evening last week.
 
 The chart below shows how this forecast tracked actual hourly prices across the 2025-2026 test period, the same period used to evaluate the LSTM.
 
@@ -157,7 +157,7 @@ It follows the weekly rhythm well and stays in the right price range most of the
 
 ### Model 2: LSTM (PyTorch)
 
-An LSTM (Long Short-Term Memory network) is a recurrent neural network built for sequential data. The naive baseline copies last week : It works for routine hours but has no awareness of what is happening right now. If prices have been climbing for three days, or a heat wave is building, or the last 48 hours look nothing like the same period last week, the naive baseline cannot respond. The LSTM sees 48 hours of recent price history and rolling statistics, giving it the context to detect when this week is shaping up differently from last week. That is where the value should come from.
+An LSTM (Long Short-Term Memory network) is a recurrent neural network built for sequential data. The naive baseline copies last week. It works for routine hours but has no awareness of what is happening right now. If prices have been climbing for three days, or a heat wave is building, or the last 48 hours look nothing like the same period last week, the naive baseline cannot respond. The LSTM sees 48 hours of recent price history and rolling statistics, giving it the context to detect when this week is shaping up differently from last week. That is where the value should come from.
 
 **Architecture:**
 ```
@@ -235,13 +235,13 @@ All four use a one-step shift so the calculation only uses data available before
 
 ## Results
 
-Both models are evaluated on the same test period and the same hourly granularity: 2025-2026, the years neither model trained on.
+Both models are evaluated on the same test period and the same hourly granularity: 2025-2026, the years neither model trained on. The winsorization cap and feature scaler used by the LSTM are both fit on training data only (2019-2023), fixing two earlier leakage issues where test period values were influencing the preprocessing.
 
 | Metric | Naive Baseline | LSTM |
 |---|---|---|
-| MAE | $19.43/MWh | $20.93/MWh |
-| RMSE | $78.80/MWh | $89.66/MWh |
-| MAPE | 71.7% | 90.7% |
+| MAE | $19.43/MWh | $19.43/MWh |
+| RMSE | $78.80/MWh | $67.57/MWh |
+| MAPE | 71.7% | 89.2% |
 
 ### What each metric measures
 
@@ -253,31 +253,31 @@ Both models are evaluated on the same test period and the same hourly granularit
 
 ### Reading the numbers
 
-The naive baseline wins, but the gap is small. MAE is $19.43 vs $20.93, RMSE is $78.80 vs $89.66. This is a fair comparison: both models are scored on the same hourly 2025-2026 data the LSTM never saw during training, and the naive baseline is evaluated the same way rather than on an easier daily average from an earlier year.
+MAE is now tied at $19.43/MWh for both models. RMSE favors the LSTM, $67.57 vs the baseline's $78.80, which means the LSTM is doing noticeably better on the large errors that come from spike hours, even though its typical hour-to-hour error matches the baseline almost exactly.
 
-The LSTM already has access to last week's price through the price_lag_168h feature, so it is not blind to the signal the naive baseline relies on. The gap comes from somewhere else. Ten training epochs is not enough for an LSTM of this size to converge fully, and the training curve below shows loss still declining when training stopped. The model is also trained on 2019-2023 data, a period that includes the elevated 2022-2023 price years, while the test period is 2025-2026. If the overall price level shifted between those periods, the model carries a bias from the training distribution into a test period that looks different.
+Two fixes drove this change from earlier results. The feature scaler and the price winsorization cap were both being computed on the full dataset, including 2025-2026 test period data, before the fix. That let test data leak into preprocessing decisions made on the training set. After fixing both to use training data only (2019-2023), the LSTM's numbers shifted meaningfully, in this case for the better, which is itself a sign the original leakage was working against the model rather than artificially inflating its performance.
 
-The RMSE gap is the bigger story than MAE. Both models struggle on the same large spike in early 2026, visible in the baseline chart above, where actual prices approached $1,900/MWh. Large single-hour misses on events like that inflate RMSE far more than MAE, and neither model handles them well.
+A caveat worth being direct about: the two MAE numbers are not counting hours in exactly the same way. The naive baseline produces one independent forecast per hour, so each of the 12,862 test hours is counted once. The LSTM's evaluation uses overlapping 24-hour forecast windows, so most individual hours appear in roughly 24 different forecast windows and get averaged into the MAE multiple times. This does not invalidate the comparison, but it means the LSTM's MAE reflects performance across many overlapping predictions for the same hour rather than one prediction per hour like the baseline. A stricter comparison would de-duplicate the LSTM's predictions to one forecast per hour before computing the metric.
 
-None of this means the LSTM is the wrong approach. It means this specific run, with limited training and a short lookback window, has not yet pulled ahead of a baseline that already encodes the strongest signal in the data. The next section covers what would close that gap.
+On the price_lag_168h feature: it is present in the model's inputs, so the claim that the LSTM cannot see last week's price at all is not accurate. But with a 48-hour lookback window and a 24-hour forecast horizon, that feature is computed once at the start of each input sequence. It directly informs the first hour of the 24-hour forecast block well, but its relevance to hour 20 or hour 24 of that same block is more indirect, since the model has to carry that information forward through its hidden state rather than seeing a fresh 168h-lag value for each forecasted hour. Extending the lookback window to 168 hours, already listed in the next section, is the more direct way to give the model that signal throughout the forecast window rather than just at the start of it.
 
 ### Training curve
 
 ![LSTM Training Curve](lstm_training_curve.png)
 
-The train loss is still declining at epoch 10 and has not flattened out. That is the clearest sign that 10 epochs was not enough — the model was still learning when we stopped. A properly trained LSTM would show both lines converging and leveling off.
+The train loss is still declining at epoch 10 and has not flattened out. That is the clearest sign that 10 epochs was not enough. The model was still learning when we stopped. A properly trained LSTM would show both lines converging and leveling off.
 
 ### Forecast error by horizon
 
 ![Horizon MAE](lstm_horizon_mae.png)
 
-Error is fairly flat across the 24-hour forecast window, staying close to the $20-22 range for almost every hour. There is a mild rise in the middle of the window, around h+10 to h+16, and the lowest error is at h+1, which makes sense since the most recent price is the easiest one to get right. The lack of a sharp pattern here suggests the errors are spread fairly evenly rather than concentrated at specific times of day.
+Error rises as the forecast looks further ahead. The first hour of the forecast has the lowest error, around $16/MWh, and error climbs through the middle of the window before reaching its highest point at h+23, around $23/MWh. This is the pattern you would expect from a sequence model: predicting one hour ahead is easier than predicting 23 hours ahead, since the model has less uncertainty to carry forward at the start of the window. It also lines up with the price_lag_168h limitation described above. That feature is most informative early in the forecast block and its influence fades as the forecast moves further from the input window.
 
 ### Sample forecasts vs actual
 
 ![LSTM Forecasts](lstm_24h_forecasts.png)
 
-The forecast follows the general shape of the day but in a flattened, smoothed-out version of it. Sharp peaks get rounded off and sudden drops get missed entirely. One sample is a clear case: actual prices swing from $8 to $65 and back down over the day, while the forecast stays in a tight $30-37 band the whole time. The model has learned the average behavior of a typical day rather than the specific shape of this one. That is consistent with only 10 epochs of training and a 48-hour input window that gives it limited context to react to what is actually unfolding.
+The forecast follows the general shape of the day but in a flattened, smoothed-out version of it. Sharp peaks get rounded off and sudden drops get missed entirely. One sample is a clear case: actual prices swing from $8 to $65 and back down over the day, while the forecast stays in a tight $25-35 band the whole time, landing an MAE of $11.25 on that sample despite missing the peak by 30+ dollars at its sharpest point. The model has learned the average behavior of a typical day rather than the specific shape of this one. That is consistent with only 10 epochs of training and a 48-hour input window that gives it limited context to react to what is actually unfolding.
 
 ---
 
