@@ -114,6 +114,17 @@ Four things stood out.
 
 - **The market runs in two modes.** *(Charts 3 and 4: Price Distribution, Market Regimes Over Time)* 85.6% of hours sit below $50/MWh, the routine market, predictable week to week. The other 14.4% are elevated or spike hours, concentrated in 2022 and 2023. The mean price is $54/MWh against a median of $23.75 and that entire gap comes from the spike mode. Any model has to deal with both and they behave very differently.
 
+Median tells you what a typical hour costs. 
+Mean tells you what the whole year costs divided by hours, which is what actually lands in a battery operator's bank account. If you own a battery, you don't get paid the median. 
+
+So the mean is the more honest number for revenue and the median is the more honest number for describing a typical day. 
+
+We will need a two-stage model. 
+
+One model predicts the routine price.
+A second model predicts whether the hour will spike at all. That's a classification problem, not a regression one, and it needs different inputs: reserve margins, load forecast versus available capacity, weather extremes. None of which wecurrently have.
+
+
 - **Negative prices are new.** *(No chart, 69 hours total)* 63 of the 69 negative hours are in 2026. There were none at all from 2019 through 2023. They cluster between 9am and 3pm in February through May, which points to solar rather than wind: mild spring days with strong midday generation and not enough demand to absorb it. This looks like a structural change in the market driven by Texas solar buildout and it appears entirely in the test period.
 
 One more thing worth flagging. There are 69 hours of negative prices in the dataset, and 63 of them are in 2026. There were none at all from 2019 through 2023. They cluster between 9am and 3pm in February through May, which points to solar rather than wind: mild spring days with strong midday generation and not enough demand to absorb it. This is not a quirk in the data. It looks like a structural change in the market driven by Texas solar buildout, and it appears entirely in the test period.
