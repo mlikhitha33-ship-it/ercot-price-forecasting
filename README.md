@@ -165,7 +165,11 @@ SARIMA was the first model tried. It is a classical statistical model that works
 
 ### Model 1: Seasonal Naive Baseline
 
-Instead of SARIMA, a simpler baseline was used: predict each hour's price as the same hour one week earlier. No training required and it works because ERCOT weekly demand patterns are consistent. Tuesday evening this week looks a lot like Tuesday evening last week.
+Instead of SARIMA, a simpler baseline was used: predict each hour's price as the same hour one week earlier. 
+
+**Data used**
+
+There is no training step. The forecast for any hour is the price from the same hour one week earlier, so the method needs no fitted parameters and no training window.It only needs the previous week of actual prices at prediction time.ERCOT weekly demand patterns are consistent. Tuesday evening this week looks a lot like Tuesday evening last week.
 
 The chart below shows how this forecast tracked actual hourly prices across the 2025-2026 test period, the same period used to evaluate the LSTM.
 
