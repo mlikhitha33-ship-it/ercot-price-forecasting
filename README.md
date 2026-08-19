@@ -104,13 +104,17 @@ PRICE DISTRIBUTION
 ```
 Analysis:
 
-**Hour of day matters more than expected.** Prices sit around $17/MWh between 2-4am and climb to $37-39/MWh between 5-7pm. That is more than a 2x swing within a single day.
+Four things stood out.
 
-**But the expensive hour and the risky hour are not the same hour.** The median peaks at 7pm. The share of hours above $100 peaks at 3pm. In August, 49% of 3pm hours cleared $100, compared to 33% at 6pm. Those are two different things: the evening peak is demand, the afternoon peak is scarcity, when air conditioning load is climbing and reserves are tightest. A battery operator positions for the evening spread but the outsized days happen in the afternoon.
+- **Hour of day matters more than expected.** *(Chart 1: What a Normal Hour Costs)* Prices sit around $17/MWh between 2-4am and climb to $37-39/MWh between 5-7pm. That is more than a 2x swing within a single day.
 
-**Summer and winter have opposite daily shapes.** August spike risk peaks at 3pm. February spike risk peaks at 7am, the winter heating ramp. The month-by-hour view below makes this visible. It also means there is no single daily price shape to learn. There are at least two, and which one applies depends on the season.
+- **The expensive hour and the spike hour are not the same hour.** *(Charts 1 and 2 together)* The median peaks at 7pm. The share of hours above $100 peaks at 3pm. In August, 49% of 3pm hours cleared $100, compared to 33% at 6pm. Those are two different things: the evening peak is demand, the afternoon peak is scarcity, when air conditioning load is climbing and reserves are tightest. A battery operator positions for the evening spread, but the outsized days happen in the afternoon.
 
-**The market runs in two modes.** 85.6% of hours sit below $50/MWh, the routine market, predictable week to week. The other 14.4% are elevated or spike hours, concentrated in 2022 and 2023. The mean price is $54/MWh against a median of $23.75, and that entire gap comes from the spike mode. Any model has to deal with both and they behave very differently.
+- **Summer and winter have opposite daily shapes.** *(Chart 2: % of Hours Above $100, by Month and Hour)* August spike risk peaks at 3pm. February spike risk peaks at 7am, the winter heating ramp. There is no single daily price shape to learn. There are at least two, and which one applies depends on the season.
+
+- **The market runs in two modes.** *(Charts 3 and 4: Price Distribution, Market Regimes Over Time)* 85.6% of hours sit below $50/MWh, the routine market, predictable week to week. The other 14.4% are elevated or spike hours, concentrated in 2022 and 2023. The mean price is $54/MWh against a median of $23.75 and that entire gap comes from the spike mode. Any model has to deal with both and they behave very differently.
+
+- **Negative prices are new.** *(No chart, 69 hours total)* 63 of the 69 negative hours are in 2026. There were none at all from 2019 through 2023. They cluster between 9am and 3pm in February through May, which points to solar rather than wind: mild spring days with strong midday generation and not enough demand to absorb it. This looks like a structural change in the market driven by Texas solar buildout and it appears entirely in the test period.
 
 One more thing worth flagging. There are 69 hours of negative prices in the dataset, and 63 of them are in 2026. There were none at all from 2019 through 2023. They cluster between 9am and 3pm in February through May, which points to solar rather than wind: mild spring days with strong midday generation and not enough demand to absorb it. This is not a quirk in the data. It looks like a structural change in the market driven by Texas solar buildout, and it appears entirely in the test period.
 
