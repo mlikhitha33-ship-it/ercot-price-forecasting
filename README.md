@@ -167,6 +167,12 @@ SARIMA was the first model tried. It is a classical statistical model that works
 
 Instead of SARIMA, a simpler baseline was used: predict each hour's price as the same hour one week earlier. 
 
+**Method**
+
+    ŷ(t) = y(t − 168)
+
+The forecast for hour *t* is the actual price 168 hours earlier, exactly one week. This preserves both hour of day and day of week. Predicting from yesterday would mean forecasting Saturday from Friday, and weekends price differently.
+
 **Data used**
 
 There is no training step. The forecast for any hour is the price from the same hour one week earlier, so the method needs no fitted parameters and no training window.It only needs the previous week of actual prices at prediction time.ERCOT weekly demand patterns are consistent. Tuesday evening this week looks a lot like Tuesday evening last week.
