@@ -124,7 +124,8 @@ Total mean cost for a year = 8,760 hours × $54 = about $473,000 per MWh of cont
 Total median cost for a year = 8,760 × $23.75 = about $208,000.
 
 That's a $265,000 gap, and it's the whole point. The median is what you'd guess a year costs by looking at a typical hour. The mean is what a year actually costs. The difference is the spike hours which is closer to what actually lands in a battery operator's bank account, because revenue is a sum and the sum is driven by the spike hours.
-Overall, The EDA points in two directions. The EDA points in two directions. The weekly and daily cycles are strong and consistent, which favours a classical time series model. Spikes follow no schedule at all, and no amount of seasonal structure will capture them. The approach was therefore to start simple and add complexity only where it demonstrably improved results. A classical statistical model first, then a seasonal naive baseline to establish a floor, then a neural network. If the neural network could not outperform a rule as simple as repeating the previous week, the additional complexity would not be justified.
+
+Overall, The EDA points in two directions. The weekly and daily cycles are strong and consistent, which favors a classical time series model. Spikes follow no schedule at all & no amount of seasonal structure will capture them. The approach was therefore to start simple and add complexity only where it demonstrably improved results. A classical statistical model first then a seasonal naive baseline to establish a floor, then a neural network. If the neural network could not outperform a rule as simple as repeating the previous week, the additional complexity would not be justified.
 
 ---
 
