@@ -17,6 +17,11 @@ Unlike regulated markets where utilities set prices, ERCOT runs a competitive wh
 **How is price data collected?**
 ERCOT calculates Day-Ahead Market (DAM) Settlement Point Prices for every hour of the following day. Generators submit offers (Wind farm, solar farm, Battery), load serving entities (Retail electric providers) submit bids, and ERCOT's algorithms find the price that balances supply and demand at each grid location. Results are published publicly on ERCOT's website each day.
 
+| Step | What happens | Generator (Seller) | LSE (Buyer) | ERCOT |
+|---|---|---|---|---|
+| **1. Submit offers/bids** | Participants submit prices | Offers **500 MW @ $40/MWh** | Bids for **500 MW @ $60/MWh** | Receives both |
+| **2. Match supply & demand** | ERCOT finds compatible supply/demand | Will sell at **$40 or higher** | Will buy at **$60 or lower** | **Trade can clear** because $40 ≤ $60 |
+
 **Who uses this data?**
 Primary users are energy traders, grid-scale battery storage operators, renewable energy developers, retail electricity providers and analytics firms building forecasting tools for the energy industry.
 
