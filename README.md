@@ -107,9 +107,7 @@ PRICE DISTRIBUTION
 
 Analysis:
 
-Five things stood out.
-
-- **Negative prices are new.** *(No chart, 69 hours total)* 63 of the 69 negative hours are in 2026. There were none at all from 2019 through 2023. They cluster between 9am and 3pm in February through May, which points to solar rather than wind: mild spring days with strong midday generation and not enough demand to absorb it. This looks like a structural change in the market driven by Texas solar buildout, and it appears entirely in the test period.
+- **Negative prices are new.** *(No chart, 69 hours total)* 63 of the 69 negative hours are in 2026. There were none at all from 2019 through 2023. They cluster between 9am and 3pm in February through May, which points to solar rather than wind: mild spring days with strong midday generation and not enough demand to absorb it. This looks like a structural change in the market driven by Texas solar buildout and it appears entirely in the test period.
 
 - **Hour of day matters more than expected.** *(Chart 1: What a Normal Hour Costs)* Prices sit around $17/MWh between 2-4am and climb to $37-39/MWh between 5-7pm. That is more than a 2x swing within a single day.
 
