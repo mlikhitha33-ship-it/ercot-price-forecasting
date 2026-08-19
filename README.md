@@ -171,7 +171,7 @@ Instead of SARIMA, a simpler baseline was used: predict each hour's price as the
 
     ŷ(t) = y(t − 168)
 
-The forecast for hour *t* is the actual price 168 hours earlier, exactly one week. This preserves both hour of day and day of week. Predicting from yesterday would mean forecasting Saturday from Friday, and weekends price differently.
+The forecast for hour *t* is the actual price 168 hours earlier, exactly one week. This preserves both hour of day and day of week.
 
 **Data used**
 
