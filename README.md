@@ -102,9 +102,14 @@ PRICE DISTRIBUTION
   $100 - $200           :  1,546 hours (2.4%)
   Above $200            :  1,071 hours (1.6%)
 ```
+
+![ERCOT EDA](ercot_eda.png)
+
 Analysis:
 
-Four things stood out.
+Five things stood out.
+
+- **Negative prices are new.** *(No chart, 69 hours total)* 63 of the 69 negative hours are in 2026. There were none at all from 2019 through 2023. They cluster between 9am and 3pm in February through May, which points to solar rather than wind: mild spring days with strong midday generation and not enough demand to absorb it. This looks like a structural change in the market driven by Texas solar buildout, and it appears entirely in the test period.
 
 - **Hour of day matters more than expected.** *(Chart 1: What a Normal Hour Costs)* Prices sit around $17/MWh between 2-4am and climb to $37-39/MWh between 5-7pm. That is more than a 2x swing within a single day.
 
@@ -112,25 +117,14 @@ Four things stood out.
 
 - **Summer and winter have opposite daily shapes.** *(Chart 2: % of Hours Above $100, by Month and Hour)* August spike risk peaks at 3pm. February spike risk peaks at 7am, the winter heating ramp. There is no single daily price shape to learn. There are at least two, and which one applies depends on the season.
 
-- **The market runs in two modes.** *(Charts 3 and 4: Price Distribution, Market Regimes Over Time)* 85.6% of hours sit below $50/MWh, the routine market, predictable week to week. The other 14.4% are elevated or spike hours, concentrated in 2022 and 2023. The mean price is $54/MWh against a median of $23.75 and that entire gap comes from the spike mode. Any model has to deal with both and they behave very differently.
+- **The market runs in two modes.** *(Charts 3 and 4: Price Distribution, Market Regimes Over Time)* 85.6% of hours sit below $50/MWh, the routine market, predictable week to week. The other 14.4% are elevated or spike hours, concentrated in 2022 and 2023. Any model has to deal with both and they behave very differently. The two-mode finding has a consequence worth stating before any modeling starts.
+- The mean price is $54/MWh &
+-  the median is $23.75.
 
-Median tells you what a typical hour costs. 
-Mean tells you what the whole year costs divided by hours, which is what actually lands in a battery operator's bank account. If you own a battery, you don't get paid the median. 
+Both are correct. The median tells you what a typical hour costs. The mean tells us what the whole year costs divided by hours, which is closer to what actually lands in a battery operator's bank account, because revenue is a sum and the sum is driven by the spike hours.
+The EDA points in two directions. The weekly rhythm is strong and consistent, which favours a classical time series model. The spike mode follows no rhythm at all, and no amount of seasonal structure will capture it.
 
-So the mean is the more honest number for revenue and the median is the more honest number for describing a typical day. 
-
-We will need a two-stage model. 
-
-One model predicts the routine price.
-A second model predicts whether the hour will spike at all. That's a classification problem, not a regression one, and it needs different inputs: reserve margins, load forecast versus available capacity, weather extremes. None of which wecurrently have.
-
-
-- **Negative prices are new.** *(No chart, 69 hours total)* 63 of the 69 negative hours are in 2026. There were none at all from 2019 through 2023. They cluster between 9am and 3pm in February through May, which points to solar rather than wind: mild spring days with strong midday generation and not enough demand to absorb it. This looks like a structural change in the market driven by Texas solar buildout and it appears entirely in the test period.
-
-One more thing worth flagging. There are 69 hours of negative prices in the dataset, and 63 of them are in 2026. There were none at all from 2019 through 2023. They cluster between 9am and 3pm in February through May, which points to solar rather than wind: mild spring days with strong midday generation and not enough demand to absorb it. This is not a quirk in the data. It looks like a structural change in the market driven by Texas solar buildout, and it appears entirely in the test period.
-
-
-![ERCOT EDA](ercot_eda.png)
+The approach was therefore to start simple and add complexity only where it demonstrably improved results. A classical statistical model first, then a seasonal naive baseline to establish a floor, then a neural network. If the neural network could not outperform a rule as simple as repeating the previous week, the additional complexity would not be justified.
 
 ---
 
