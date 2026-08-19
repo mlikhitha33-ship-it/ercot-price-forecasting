@@ -118,9 +118,9 @@ Analysis:
 - **The market runs in two modes.** *(Charts 3 and 4: Price Distribution, Market Regimes Over Time)* 85.6% of hours sit below $50/MWh, the routine market, predictable week to week. The other 14.4% are elevated or spike hours, concentrated in 2022 and 2023. Any model has to deal with both and they behave very differently. The two-mode finding has a consequence worth stating before any modeling starts.
 - The mean price is $54/MWh and the median is $23.75. Across a full year of 8,760 hours:
 
-- Mean: 8,760 × $54 = about $473,000
-- Median: 8,760 × $23.75 = about $208,000
-- Gap: about $265,000
+-- Mean: 8,760 × $54 = about $473,000
+-- Median: 8,760 × $23.75 = about $208,000
+-- Gap: about $265,000
 
 The median is what you would estimate a year costs by looking at a typical hour. The mean is what a year actually costs. The difference is the spike hours, and the mean is the closer figure for a battery operator, because revenue is a sum and the sum is driven by those hours.
 
