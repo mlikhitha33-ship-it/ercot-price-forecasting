@@ -33,7 +33,9 @@ Getting the timing right matters. Missing the evening ramp by two hours is the d
 ---
 
 ## Exploratory Data Analysis
-ERCOT runs two markets. The real-time market settles every five minutes based on what's actually happening on the grid right now. The day-ahead market is a forward auction held once per day for the following day's 24 hours. Generators submit offers, load-serving entities submit bids and ERCOT clears all 24 hours at once. I pulled **ERCOT Day-Ahead Market Settlement Point Prices** for the `HB_NORTH` hub, the North Texas benchmark price used by traders and storage operators across the state.
+ERCOT runs two markets. The real-time market settles every five minutes based on what's actually happening on the grid right now. The day-ahead market is a forward auction held once per day for the following day's 24 hours. Generators / sellers submit offers (Wind farm, solar farm, Battery), load serving entities / Buyers (Retail electric providers) submit bids and ERCOT clears all 24 hours at once. 
+
+I pulled **ERCOT Day-Ahead Market Settlement Point Prices** for the `HB_NORTH` hub, the North Texas benchmark price used by traders and storage operators across the state.
 
 **Source:** [ERCOT Historical DAM Load Zone and Hub Prices](https://www.ercot.com/mp/data-products/data-product-details?id=np4-180-er)
 
