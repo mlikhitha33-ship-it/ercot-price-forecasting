@@ -116,12 +116,13 @@ Analysis:
 - **Summer and winter have opposite daily shapes.** *(Chart 2: % of Hours Above $100, by Month and Hour)* August spike risk peaks at 3pm. February spike risk peaks at 7am, the winter heating ramp. There is no single daily price shape to learn. There are at least two, and which one applies depends on the season.
 
 - **The market runs in two modes.** *(Charts 3 and 4: Price Distribution, Market Regimes Over Time)* 85.6% of hours sit below $50/MWh, the routine market, predictable week to week. The other 14.4% are elevated or spike hours, concentrated in 2022 and 2023. Any model has to deal with both and they behave very differently. The two-mode finding has a consequence worth stating before any modeling starts.
-- The mean price is $54/MWh & the median is $23.75.
+- The mean price is $54/MWh and the median is $23.75. Across a full year of 8,760 hours:
 
-Total mean cost for a year = 8,760 hours × $54 = about $473,000 per MWh of continuous consumption.
-Total median cost for a year = 8,760 × $23.75 = about $208,000.
+- Mean: 8,760 × $54 = about $473,000
+- Median: 8,760 × $23.75 = about $208,000
+- Gap: about $265,000
 
-That's a $265,000 gap, and it's the whole point. The median is what you'd guess a year costs by looking at a typical hour. The mean is what a year actually costs. The difference is the spike hours which is closer to what actually lands in a battery operator's bank account, because revenue is a sum and the sum is driven by the spike hours.
+The median is what you would estimate a year costs by looking at a typical hour. The mean is what a year actually costs. The difference is the spike hours, and the mean is the closer figure for a battery operator, because revenue is a sum and the sum is driven by those hours.
 
 Overall, The EDA points in two directions. The weekly and daily cycles are strong and consistent, which favors a classical time series model. Spikes follow no schedule at all & no amount of seasonal structure will capture them. The approach was therefore to start simple and add complexity only where it demonstrably improved results. A classical statistical model first then a seasonal naive baseline to establish a floor, then a neural network. If the neural network could not outperform a rule as simple as repeating the previous week, the additional complexity would not be justified.
 
