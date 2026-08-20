@@ -284,11 +284,10 @@ All four use a one-step shift, so the calculation only uses data available befor
 ---
 
 **Cyclical time and calendar features**
-
-| Features | Why included |
-
+---
 One limitation. Hour and month enter as separate features, so the model can learn that afternoons are expensive and that August is expensive, but not that afternoons are expensive *specifically* in August. The EDA found exactly that pattern: August spike risk peaks at 3pm, February's at 7am. 
 
+| Features | Why included |
 |---|---|
 | `hour_sin`, `hour_cos` | A $21.49/MWh gap between the cheapest hour (3am) and the most expensive (7pm) — the largest single pattern in the data. Sin/cos is used instead of raw integers because hour 23 and hour 0 are adjacent in real life but 23 apart numerically. |
 | `month_sin`, `month_cos` | Not the median price level, which barely moves across the year, but the spike concentration: 13.1% of August hours clear $100 against 1.3% in March. This is also the only channel for seasonal information, since a 48-hour input window contains no clue as to the time of year. |
