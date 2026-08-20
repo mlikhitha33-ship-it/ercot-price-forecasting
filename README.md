@@ -218,11 +218,13 @@ The LSTM sees 48 hours of recent price history and rolling statistics, which sho
 
 **Architecture:**
 ```
-Input  : 48-hour sliding window x 20 features
-LSTM   : 2 layers, hidden size 128, dropout 0.2
-FC head: 128 -> ReLU(64) -> 24
-Output : next 24-hour price forecast
-Parameters: 218,712
+Input      : 48-hour sliding window x 20 features
+LSTM       : 2 layers, hidden size 128, dropout 0.2
+FC head    : 128 -> ReLU(64) -> 24
+Output     : next 24-hour price forecast
+Parameters : 218,712
+Training   : 43,580 overlapping samples, 2019-2023
+Evaluation : 534 daily forecasts, each starting at midnight, 2025-2026
 ```
 
 **Features (20 total):**
