@@ -310,11 +310,10 @@ Sin/cos encoding applies throughout for the same reason: December and January ar
 ---
 Both models are evaluated on the same 534 days, January 2025 to June 2026, and each test hour is scored exactly once. The winsorization cap and feature scaler used by the LSTM are both fit on training data only (2019-2023), fixing two earlier leakage issues where test period values were influencing the preprocessing.
 
-**MAE (Mean Absolute Error)** is the average absolute difference between predicted and actual prices across all test hours.
-**RMSE (Root Mean Squared Error)** squares each error before averaging then takes the square root. Large errors are penalized much more heavily than small ones which matters during price spikes. It tells you how badly the model performs when it is really wrong.
-**MAPE (Mean Absolute Percentage Error)** expresses errors as a percentage of the actual price.But it can look extreme when prices are low.
+- **MAE (Mean Absolute Error)** is the average absolute difference between predicted and actual prices across all test hours.
+- **RMSE (Root Mean Squared Error)** squares each error before averaging then takes the square root. Large errors are penalized much more heavily than small ones which matters during price spikes. It tells you how badly the model performs when it is really wrong.
+- **MAPE (Mean Absolute Percentage Error)** expresses errors as a percentage of the actual price.But it can look extreme when prices are low.
 
----
 
 | Metric | Seasonal naive | LSTM | Change |
 |---|---|---|---|
