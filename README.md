@@ -247,9 +247,20 @@ Each position produces one training sample. The input is not one number per hour
     │  ...                                                            │
     │  48    20.79     -0.259      0.966    22.02   ...          23.60│
     └──────────────────────────────────────────────────────────────── ┘
+    OUTPUT:
+   Sample 1
+INPUT : hours  1-48
+OUTPUT: hours 49-72
 
-    OUTPUT: hours 49-72, 24 prices
-    [ 17.60, 17.22, 16.88, 17.51, ... , 16.71 ]
+hour     49     50     51     52    ...     72
+price  17.60  17.22  16.88  17.51   ...  16.71
+
+Sample 2
+INPUT : hours  2-49
+OUTPUT: hours 50-73
+
+hour     50     51     52     53    ...     73
+price  17.22  16.88  17.51  18.32   ...  15.76
 
 The output is prices only, one per hour for the next 24 hours. The 2019-2023 training period yields 43,651 hourly rows. The last 71 cannot start a sample, since each needs 48 hours of history plus the 24 that followed, so training runs on 43,580 samples. 
 
