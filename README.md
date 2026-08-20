@@ -314,13 +314,14 @@ All four use a one-step shift so the calculation only uses data available before
 
 ## Results
 
-Both models are evaluated on the same test period and the same hourly granularity: 2025-2026, the years neither model trained on. The winsorization cap and feature scaler used by the LSTM are both fit on training data only (2019-2023), fixing two earlier leakage issues where test period values were influencing the preprocessing.
+Both models are evaluated on the same 534 days, January 2025 to June 2026, and each test hour is scored exactly once. The winsorization cap and feature scaler used by the LSTM are both fit on training data only (2019-2023), fixing two earlier leakage issues where test period values were influencing the preprocessing.
 
-| Metric | Naive Baseline | LSTM |
-|---|---|---|
-| MAE | $19.43/MWh | $19.43/MWh |
-| RMSE | $78.80/MWh | $67.57/MWh |
-| MAPE | 71.7% | 89.2% |
+
+| Metric | Seasonal naive | LSTM | Change |
+|---|---|---|---|
+| MAE | $19.43/MWh | $18.50/MWh | 4.8% better |
+| RMSE | $78.80/MWh | $55.82/MWh | 29.2% better |
+| Modified MAPE | 71.7% | 93.2% | 30% worse |
 
 ### What each metric measures
 
