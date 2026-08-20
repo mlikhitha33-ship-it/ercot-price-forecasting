@@ -274,14 +274,12 @@ Training adjusts the model's weights until its 24 output numbers sit as close as
 
 **Rolling statistics**
 
-| Feature | Why included |
+| Features | Why included |
 |---|---|
-| price_roll_24h_mean | Recent price level. Tells the model whether it is in a high-price or low-price period right now. |
-| price_roll_24h_std | Recent volatility. A high value means the market is choppy. A low value means conditions are stable. |
-| price_roll_7d_mean | Broader price regime over the past week. Smooths out daily noise to show the underlying trend. |
-| price_roll_7d_std | Weekly volatility. Distinguishes a calm week from a turbulent one. |
+| `price_roll_24h_mean`, `price_roll_24h_std` | Recent price level and volatility. Whether the market is high or low right now, and whether it is choppy or stable. |
+| `price_roll_7d_mean`, `price_roll_7d_std` | The same over a week. Smooths daily noise to show the underlying regime, and distinguishes a calm week from a turbulent one. |
 
-All four use a one-step shift so the calculation only uses data available before the current hour. Without that shift you are leaking future information into training.
+All four use a one-step shift, so the calculation only uses data available before the current hour. Without that shift, future information leaks into training.
 
 ---
 
