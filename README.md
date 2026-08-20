@@ -345,7 +345,7 @@ Error rises as the forecast looks further ahead. The first hour of the forecast 
 
 ### Sample forecasts vs actual
 
-![LSTM Forecasts](lstm_24h_forecasts.png)
+![LSTM Forecasts](ltsm_24h_forecasts.png)
 
 The forecast follows the general shape of the day but in a flattened, smoothed-out version of it. Sharp peaks get rounded off and sudden drops get missed entirely. One sample is a clear case: actual prices swing from $8 to $65 and back down over the day, while the forecast stays in a tight $25-35 band the whole time, landing an MAE of $11.25 on that sample despite missing the peak by 30+ dollars at its sharpest point. The model has learned the average behavior of a typical day rather than the specific shape of this one. That is consistent with only 10 epochs of training and a 48-hour input window that gives it limited context to react to what is actually unfolding.
 
