@@ -354,15 +354,10 @@ Error rises as the forecast looks further ahead. The first hour of the forecast 
 
 ---
 
-**What is missing**
 
-The model uses only historical price features and calendar/time encodings. It does not include forward looking market fundamentals such as ERCOT load forecasts, wind and solar generation, natural gas prices, or temperature. Adding even one external feature like the hourly ERCOT load forecast would likely improve accuracy more than any architectural change to the LSTM.
+## Limitations and Next Steps
 
-On cyclical encoding: hour of day is encoded using sine and cosine rather than raw integers. Hour 23 and hour 0 are adjacent in real life but 23 apart numerically. Sin/cos wraps the cycle so the model treats them as neighbors.
-
-## Tuning and Next Steps
-
- Adding external features such as ERCOT load forecasts, wind generation and natural gas prices. These changes would likely narrow the gap against the weekly seasonal naive baseline.
+The model uses only historical prices and calendar encodings. It has no view of the grid: no ERCOT load forecast, no wind or solar generation, no gas prices, no temperature. A model that cannot see reserve margins or a load forecast has no way to anticipate a scarcity event, so it settles on the average. Adding external features such as ERCOT load forecasts, wind generation and natural gas prices would likely narrow the gap against the weekly seasonal naive baseline.
 
                      ERCOT / MARKET DATA
                            │
@@ -383,7 +378,7 @@ On cyclical encoding: hour of day is encoded using sine and cosine rather than r
                            │
                     Revenue / Profit
 
-Beyond that: a two-stage model that handles spike hours separately from routine hours, quantile regression for prediction intervals instead of point forecasts and rolling walk-forward cross validation to get a more reliable read on how the model generalizes across different market conditions.
+Beyond external features: a two-stage model separating spike hours from routine hours, quantile regression to predict a range rather than a point, and a battery dispatch backtest that scores captured spread against perfect foresight rather than average error.
 
 ---
 
