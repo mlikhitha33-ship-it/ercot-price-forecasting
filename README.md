@@ -357,13 +357,16 @@ The feature scaler and the winsorization cap were originally computed on the ful
 
 ![LSTM Training Curve](lstm_training_curve.png)
 
-The training loss is still declining by epoch 10, so more epochs may help. Validation loss is flat and sits below training loss throughout.The usual rule is: train until validation loss stops falling, then stop. That assumes validation loss reflects how well the model is learning. Here it may not. The red line is flat, but is  therefore stop isn't a safe conclusion.
+The training loss is still declining by epoch 10, so more epochs may help. Validation loss is flat and sits below training loss throughout. The usual rule is: train until validation loss stops falling, then stop. That assumes validation loss reflects how well the model is learning. Here it may not. The red line is flat, therefore stop isn't a safe conclusion.
 
 ### Forecast error by horizon
 
 ![Horizon MAE](lstm_horizon_mae.png)
 
 Error rises as the forecast looks further ahead. The first hour of the forecast has the lowest error, around $16/MWh, and error climbs through the middle of the window before reaching its highest point at h+23, around $23/MWh. This is the pattern you would expect from a sequence model: predicting one hour ahead is easier than predicting 23 hours ahead, since the model has less uncertainty to carry forward at the start of the window. It also lines up with the price_lag_168h limitation described above. That feature is most informative early in the forecast block and its influence fades as the forecast moves further from the input window.
+
+> [!WARNING]
+> The model gets the daily shape roughly right but the timing wrong, and on the biggest day of the test period it got the shape backwards too. The LSTM outperforms the baseline, most clearly on volatile hours (RMSE : $78.80/MWh Vs $55.82/MWh). But the improvement is modest relative to the effort.failure modes point at the feature set rather than the architecture. A model that cannot see load forecasts or reserve margins has no route to predicting scarcity.
 
 ---
 
