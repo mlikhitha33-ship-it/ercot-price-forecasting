@@ -338,20 +338,20 @@ Note: MAPE has been removed since is generally a poor choice for wholesale elect
 
 ### Comparing LSTM Sample forecasts vs actual
 
-Each panel reports MAE, which on a single day means the average miss across those 24 hours, in dollars. RMSE over 24 hours would be dominated by one or two bad hours rather than describing the day. Modified MAPE would be misleading in the other direction, since it is most sensitive to cheap hours.
+Each panel reports MAE, which on a single day means the average miss across those 24 hours, in dollars. RMSE over 24 hours would be dominated by one or two bad hours rather than describing the day.
 
 ![LSTM Forecasts](ltsm_24h_forecasts.png)
 
 Three days, chosen automatically: the lowest-error day, the day whose error is closest to the median, and the day with the highest actual price.
 
-On 8 March 2025 the MAE is $4.75, the smallest of the test period. But the forecast zigzags while the actual price moves smoothly. It scores well because prices stayed within a $25-45 band all day. Small error, but lacks not accurate tracking.
+8 March 2025 the MAE is $4.75, the smallest of the test period. But the forecast zigzags while the actual price moves smoothly. It scores well because prices stayed within a $25-45 band all day. Small error but lacks not accurate tracking.
 
-On 27 September 2025 sits at $13.13. The forecast is above actual for almost the entire day and misses the evening peak, predicting $43 against an actual of $61.
+27 September 2025 sits at $13.13. The forecast is above actual for almost the entire day and misses the evening peak, predicting $43 against an actual of $61.
 
-On 26 January 2026 is the highest-priced day in the test set. Actual prices run $1,200 to $1,875 overnight, then collapse to around $130 by mid-afternoon. The forecast does close to the opposite: roughly $350 during the actual peak, rising to $1,150 in the afternoon once prices have already fallen. MAE for the day is $737.That day is also the model's worst. The failure is not distributed evenly across the test period; it concentrates on exactly the day with the most money at stake.
+26 January 2026 is the highest-priced day in the test set. Actual prices run $1,200 to $1,875 overnight, then collapse to around $130 by mid-afternoon. The forecast does close to the opposite: roughly $350 during the actual peak, rising to $1,150 in the afternoon once prices have already fallen. MAE for the day is $737.That day is also the model's worst. The failure is not distributed evenly across the test period; it concentrates on exactly the day with the most money at stake.
 
 > [!WARNING]
-> The model gets the daily shape roughly right but the timing wrong, and on the biggest day of the test period it got the shape backwards too. The LSTM outperforms the baseline, most clearly on volatile hours (RMSE : $78.80/MWh Vs $55.82/MWh). But the improvement is modest relative to the effort.failure modes point at the feature set rather than the architecture. A model that cannot see load forecasts or reserve margins has no route to predicting scarcity.
+> The model gets the daily shape roughly right but the timing wrong, and on the biggest day of the test period it got the shape backwards too. The LSTM outperforms the baseline, most clearly on volatile hours (RMSE: $78.80/MWh Vs $55.82/MWh). But the improvement is modest relative to the effort.failure modes point at the feature set rather than the architecture. A model that cannot see load forecasts or reserve margins has no route to predicting scarcity.
 
 ### NOTE
 The feature scaler and the winsorization cap were originally computed on the full dataset, including the 2025-2026 test period, which let test data influence preprocessing decisions applied to the training set. Both now fit on training data only. The LSTM's metrics improved after the fix, which suggests the leakage had been working against the model rather than flattering it.
