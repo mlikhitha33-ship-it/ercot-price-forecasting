@@ -178,11 +178,27 @@ The forecast for hour *t* is the actual price 168 hours earlier, exactly one wee
 
 There is no training step. The forecast for any hour is the price from the same hour one week earlier, so the method needs no fitted parameters and no training window.It only needs the previous week of actual prices at prediction time.ERCOT weekly demand patterns are consistent. Tuesday evening this week looks a lot like Tuesday evening last week.
 
-The chart below shows how this forecast tracked actual hourly prices across the 2025-2026 test period, the same period used to evaluate the LSTM.
+The chart below shows how this forecast tracked actual hourly prices across 7 days of Jan 2025 test period, the same period used to evaluate the LSTM.
 
 ![Baseline Forecast](baseline_forecast.png)
 
-It follows the weekly rhythm well and stays in the right price range most of the time. Where it misses, sudden spikes is expected. It has no awareness of current market conditions, only what happened last week.
+**What the chart shows**
+
+The first week of the test period, with the shaded band representing the error between forecast and actual.
+
+The method performs well for the first two days. The previous Wednesday closely resembled this Wednesday, and the error band remains narrow.
+
+Performance then deteriorates sharply. On 4 and 5 January the forecast predicts $20-42 against actual prices near $1. On 6 January it predicts $17 against an actual of $104. The same method, within the same week, four days apart.
+
+This is the limitation of the approach stated directly. It has no awareness of current market conditions, only of what occurred seven days earlier. Where this week resembles last week it is difficult to beat. Where it does not, the method has no mechanism to detect the difference.
+
+Baseline Results (Test: 2025-2026, hourly)
+---------------------------------------------
+Method: Seasonal Naive (same hour, 1 week earlier)
+MAE  : $19.43/MWh
+RMSE : $78.80/MWh
+MAPE : 71.7%
+---------------------------------------------
 
 ---
 
