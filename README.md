@@ -231,25 +231,10 @@ Parameters: 218,712
 - Cyclical time encoding: sin/cos for hour, month, day-of-week
 - Calendar: is_weekend
 
-**Why these features**
-
----
-
 **How the data is shaped**
 
-The baseline follows a rule I wrote: take the price from 168 hours ago. Nothing is learned.
-
-The LSTM has no such rule. It is given examples and left to work out the mapping itself.
-
-Building those examples means sliding a window across the price history. Each position produces one training sample:
-
-    INPUT (48 hours)          OUTPUT (24 hours)
-    hours   1 - 48       →    hours  49 - 72
-    hours   2 - 49       →    hours  50 - 73
-    hours   3 - 50       →    hours  51 - 74
-    ...
-
-The input is not one number per hour. Each hour is a row of 20 features, so a single sample looks like this:
+The baseline takes the price from 168 hours ago.The LSTM has no such rule. It is given examples and left to work out the mapping itself.
+Each position produces one training sample. The input is not one number per hour. Each hour is a row of 20 features, so a single sample looks like this:
 
     INPUT: 48 rows x 20 columns
     ┌────────────────────────────────────────────────────────────────┐
@@ -266,9 +251,12 @@ The input is not one number per hour. Each hour is a row of 20 features, so a si
 
 The output is prices only, one per hour for the next 24 hours. The model is not asked to predict the features, just the price.
 
-The 2019-2023 training period yields 43,651 hourly rows, and therefore roughly that many overlapping samples. Training means adjusting the model's 218,712 parameters until its 24 output numbers sit as close as possible to the 24 hours that actually happened.
+The 2019-2023 training period yields 43,651 hourly rows, and therefore roughly that many overlapping samples. Training adjusts the model's 218,712 parameters until its 24 output numbers sit as close as possible to the 24 hours that actually happened.
 
-Where the baseline is a formula I chose, the LSTM is a function it derived. The results section compares the two.
+
+**Why these features**
+
+---
 
 **Lagged prices**
 
