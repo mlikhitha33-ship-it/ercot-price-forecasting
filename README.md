@@ -29,11 +29,11 @@ Primary users are energy traders, grid-scale battery storage operators, renewabl
 
 Battery storage operators in ERCOT use a strategy called **price arbitrage**:
 
-- **Charge** when prices are low, typically overnight between midnight and 6am ($15-25/MWh)
-- **Discharge and sell** when prices are high, typically during the evening peak between 5-8pm ($50-80/MWh)
+- **Charge** when prices are low, typically overnight between 2am and 5am (median $17-18/MWh)
+- **Discharge and sell** when prices are high, typically during the evening peak between 5-8pm (median $37-39/MWh)
 - Profit is the spread between those two prices minus operating costs
 
-Getting the timing right matters. Missing the evening ramp by two hours is the difference between a good day and a bad one. That is what this project works on.
+On a typical day that spread is around $21/MWh. The larger opportunities are on the minority of days when prices break well above the median, and those cluster in the summer afternoon rather than the evening. The EDA section covers this. Getting the timing right matters. That is what this project works on.
 
 ---
 
