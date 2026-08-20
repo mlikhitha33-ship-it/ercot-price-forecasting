@@ -297,7 +297,6 @@ Sin/cos encoding applies throughout for the same reason: December and January ar
 
 ---
 
-
 **Training choices:**
 - **Huber loss** instead of MSE. With a $8,999/MWh spike in the training data, MSE would pull the model heavily toward predicting extremes.
 - **Winsorized prices** at the 99.9th percentile before scaling. Without this, MinMaxScaler compresses normal range prices into a very narrow band near zero.
@@ -325,6 +324,13 @@ Both models are evaluated on the same 534 days, January 2025 to June 2026, and e
 
 **MAPE (Mean Absolute Percentage Error)** expresses errors as a percentage of the actual price.But it can look extreme when prices are low.
 
+
+### Sample forecasts vs actual
+
+![LSTM Forecasts](ltsm_24h_forecasts.png)
+
+The forecast follows the general shape of the day but in a flattened, smoothed-out version of it. Sharp peaks get rounded off and sudden drops get missed entirely. One sample is a clear case: actual prices swing from $8 to $65 and back down over the day, while the forecast stays in a tight $25-35 band the whole time, landing an MAE of $11.25 on that sample despite missing the peak by 30+ dollars at its sharpest point. The model has learned the average behavior of a typical day rather than the specific shape of this one. That is consistent with only 10 epochs of training and a 48-hour input window that gives it limited context to react to what is actually unfolding.
+
 ### Reading the numbers
 
 The feature scaler and the winsorization cap were originally computed on the full dataset, including the 2025-2026 test period, which let test data influence preprocessing decisions applied to the training set. Both now fit on training data only. The LSTM's metrics improved after the fix, which suggests the leakage had been working against the model rather than flattering it.
@@ -342,12 +348,6 @@ The training loss is still declining by epoch 10, so more epochs may help. Howev
 ![Horizon MAE](lstm_horizon_mae.png)
 
 Error rises as the forecast looks further ahead. The first hour of the forecast has the lowest error, around $16/MWh, and error climbs through the middle of the window before reaching its highest point at h+23, around $23/MWh. This is the pattern you would expect from a sequence model: predicting one hour ahead is easier than predicting 23 hours ahead, since the model has less uncertainty to carry forward at the start of the window. It also lines up with the price_lag_168h limitation described above. That feature is most informative early in the forecast block and its influence fades as the forecast moves further from the input window.
-
-### Sample forecasts vs actual
-
-![LSTM Forecasts](ltsm_24h_forecasts.png)
-
-The forecast follows the general shape of the day but in a flattened, smoothed-out version of it. Sharp peaks get rounded off and sudden drops get missed entirely. One sample is a clear case: actual prices swing from $8 to $65 and back down over the day, while the forecast stays in a tight $25-35 band the whole time, landing an MAE of $11.25 on that sample despite missing the peak by 30+ dollars at its sharpest point. The model has learned the average behavior of a typical day rather than the specific shape of this one. That is consistent with only 10 epochs of training and a 48-hour input window that gives it limited context to react to what is actually unfolding.
 
 ---
 
