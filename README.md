@@ -283,22 +283,17 @@ All four use a one-step shift, so the calculation only uses data available befor
 
 ---
 
-**Cyclical time encoding**
+**Cyclical time and calendar features**
 
-| Feature | Why included |
+| Features | Why included |
 |---|---|
-| hour_sin, hour_cos | EDA showed a $21.49/MWh gap between the cheapest (3am) and most expensive (7pm) hours. Sin/cos is used instead of raw integers because hour 23 and hour 0 are adjacent in real life but 23 apart numerically. Sin/cos preserves that adjacency. |
-| month_sin, month_cos | EDA showed August running nearly $10/MWh above winter months. Same reason for sin/cos: December and January are adjacent months. |
-| dow_sin, dow_cos | EDA confirmed a weekend pricing pattern. Sin/cos preserves that Sunday and Monday are neighbors. |
+| `hour_sin`, `hour_cos` | A $21.49/MWh gap between the cheapest hour (3am) and the most expensive (7pm) — the largest single pattern in the data. Sin/cos is used instead of raw integers because hour 23 and hour 0 are adjacent in real life but 23 apart numerically. |
+| `month_sin`, `month_cos` | Not the median price level, which barely moves across the year, but the spike concentration: 13.1% of August hours clear $100 against 1.3% in March. This is also the only channel for seasonal information, since a 48-hour input window contains no clue as to the time of year. |
+| `dow_sin`, `dow_cos`, `is_weekend` | A $1.50/MWh weekend discount from lower industrial demand. A small signal, well below the model's error, and these three columns may not be earning their place. |
 
----
+Sin/cos encoding applies throughout for the same reason: December and January are adjacent months, Sunday and Monday are adjacent days.
 
-**Calendar**
-
-| Feature | Why included |
-|---|---|
-| is_weekend | EDA showed a $1.50/MWh weekend discount from lower industrial and commercial demand. Small signal but real and costs one column to include. |
-
+One limitation. Hour and month enter as separate features, so the model can learn that afternoons are expensive and that August is expensive, but not that afternoons are expensive *specifically* in August. The EDA found exactly that pattern: August spike risk peaks at 3pm, February's at 7am. Representing it would need an interaction term, which the current feature set does not have.
 ---
 
 
