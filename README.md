@@ -233,6 +233,15 @@ Evaluation : 534 daily forecasts, each starting at midnight, 2025-2026
 - Cyclical time encoding: sin/cos for hour, month, day-of-week
 - Calendar: is_weekend
 
+**Data splits**
+
+| Split | Period | Hours | Purpose |
+|---|---|---|---|
+| Train | 2019-2023 | 43,651 | The model learns from these |
+| Validation | 2024 | 8,783 | Checked each epoch; decides which weights to save |
+| Test | 2025-2026 | 12,791 | Never seen during training; produces the reported metrics |
+
+
 **How the data is shaped**
 
 The baseline takes the price from 168 hours ago.The LSTM has no such rule. It is given examples and left to work out the mapping itself.
