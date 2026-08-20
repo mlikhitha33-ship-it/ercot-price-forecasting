@@ -47,7 +47,8 @@ I pulled **ERCOT Day-Ahead Market Settlement Point Prices** for the `HB_NORTH` h
 The dataset runs from **January 2019 through June 2026**, 65,464 hourly observations. A few characteristics make this market particularly difficult to model:
 
 - **460 hours** where prices exceeded $500/MWh
-- **69 hours** of negative prices. This happens when wind generation is high and demand is low, typically overnight. Wind generators sometimes pay to offload power rather than shut down because federal production tax credits make it profitable even at a negative price. ERCOT's market allows this and it shows up in the data like any other hour.
+- **69 hours** of negative prices and 63 of them are in 2026. There were none at all from 2019 through 2023. They cluster between 9am and 3pm in February through May, which points to solar rather than wind: mild spring days with strong midday generation and not enough demand to absorb it. This looks like a structural change in the market rather than a quirk, and it appears entirely in the test period.
+  
 - **February 2021**: The 2021 winter storm 'Uri' caused an extreme ERCOT price event pushing prices to **$8,998.99/MWh**, nearly 200 times a typical price
 
 Removing these hours would make the modeling problem cleaner but less useful. Storage operators care most about exactly these events.
