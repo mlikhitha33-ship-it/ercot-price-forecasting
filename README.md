@@ -366,7 +366,11 @@ The training loss is still declining by epoch 10, so more epochs may help. Valid
 
 ![Horizon MAE](lstm_horizon_mae.png)
 
-Error rises as the forecast looks further ahead. The first hour of the forecast has the lowest error, around $16/MWh, and error climbs through the middle of the window before reaching its highest point at h+23, around $23/MWh. This is the pattern you would expect from a sequence model: predicting one hour ahead is easier than predicting 23 hours ahead, since the model has less uncertainty to carry forward at the start of the window. It also lines up with the price_lag_168h limitation described above. That feature is most informative early in the forecast block and its influence fades as the forecast moves further from the input window.
+Every test forecast starts at midnight, so the horizon axis maps directly onto hours of the day: h+1 is 00:00, h+20 is 19:00.
+
+Error is lowest overnight, around $9-12 from midnight to 4am. It peaks at $32 at 7pm, then falls back to $14 by 11pm. It does not rise steadily with distance: h+9 and h+10 are lower than h+7 and h+8, and the last three hours of the forecast are among the most accurate despite being the furthest ahead.
+
+So distance is not what drives the error. Time of day is. The model is least reliable in the evening, which is exactly where the EDA found the daily price peak: median price tops out at 7pm at $39, and the model's error tops out at the same hour at $32.
 
 ---
 
