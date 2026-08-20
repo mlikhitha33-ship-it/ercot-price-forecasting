@@ -350,6 +350,9 @@ On 27 September 2025 sits at $13.13. The forecast is above actual for almost the
 
 On 26 January 2026 is the highest-priced day in the test set. Actual prices run $1,200 to $1,875 overnight, then collapse to around $130 by mid-afternoon. The forecast does close to the opposite: roughly $350 during the actual peak, rising to $1,150 in the afternoon once prices have already fallen. MAE for the day is $737.That day is also the model's worst. The failure is not distributed evenly across the test period; it concentrates on exactly the day with the most money at stake.
 
+> [!WARNING]
+> The model gets the daily shape roughly right but the timing wrong, and on the biggest day of the test period it got the shape backwards too. The LSTM outperforms the baseline, most clearly on volatile hours (RMSE : $78.80/MWh Vs $55.82/MWh). But the improvement is modest relative to the effort.failure modes point at the feature set rather than the architecture. A model that cannot see load forecasts or reserve margins has no route to predicting scarcity.
+
 ### NOTE
 The feature scaler and the winsorization cap were originally computed on the full dataset, including the 2025-2026 test period, which let test data influence preprocessing decisions applied to the training set. Both now fit on training data only. The LSTM's metrics improved after the fix, which suggests the leakage had been working against the model rather than flattering it.
 
@@ -364,9 +367,6 @@ The training loss is still declining by epoch 10, so more epochs may help. Valid
 ![Horizon MAE](lstm_horizon_mae.png)
 
 Error rises as the forecast looks further ahead. The first hour of the forecast has the lowest error, around $16/MWh, and error climbs through the middle of the window before reaching its highest point at h+23, around $23/MWh. This is the pattern you would expect from a sequence model: predicting one hour ahead is easier than predicting 23 hours ahead, since the model has less uncertainty to carry forward at the start of the window. It also lines up with the price_lag_168h limitation described above. That feature is most informative early in the forecast block and its influence fades as the forecast moves further from the input window.
-
-> [!WARNING]
-> The model gets the daily shape roughly right but the timing wrong, and on the biggest day of the test period it got the shape backwards too. The LSTM outperforms the baseline, most clearly on volatile hours (RMSE : $78.80/MWh Vs $55.82/MWh). But the improvement is modest relative to the effort.failure modes point at the feature set rather than the architecture. A model that cannot see load forecasts or reserve margins has no route to predicting scarcity.
 
 ---
 
