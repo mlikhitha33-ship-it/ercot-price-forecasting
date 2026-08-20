@@ -235,6 +235,41 @@ Parameters: 218,712
 
 ---
 
+**How the data is shaped**
+
+The baseline follows a rule I wrote: take the price from 168 hours ago. Nothing is learned.
+
+The LSTM has no such rule. It is given examples and left to work out the mapping itself.
+
+Building those examples means sliding a window across the price history. Each position produces one training sample:
+
+    INPUT (48 hours)          OUTPUT (24 hours)
+    hours   1 - 48       →    hours  49 - 72
+    hours   2 - 49       →    hours  50 - 73
+    hours   3 - 50       →    hours  51 - 74
+    ...
+
+The input is not one number per hour. Each hour is a row of 20 features, so a single sample looks like this:
+
+    INPUT: 48 rows x 20 columns
+    ┌────────────────────────────────────────────────────────────────┐
+    │ hour   price   hour_sin   hour_cos   lag_1h   ...   roll_7d_mean│
+    │   1    15.54      0.000      1.000    18.49   ...          25.67│
+    │   2    15.31      0.259      0.966    15.54   ...          25.64│
+    │   3    15.46      0.500      0.866    15.31   ...          25.61│
+    │  ...                                                           │
+    │  48    20.79     -0.259      0.966    22.02   ...          23.60│
+    └────────────────────────────────────────────────────────────────┘
+
+    OUTPUT: 24 prices
+    [ 17.60, 17.22, 16.88, 17.51, ... , 16.71 ]
+
+The output is prices only, one per hour for the next 24 hours. The model is not asked to predict the features, just the price.
+
+The 2019-2023 training period yields 43,651 hourly rows, and therefore roughly that many overlapping samples. Training means adjusting the model's 218,712 parameters until its 24 output numbers sit as close as possible to the 24 hours that actually happened.
+
+Where the baseline is a formula I chose, the LSTM is a function it derived. The results section compares the two.
+
 **Lagged prices**
 
 | Feature | Why included |
