@@ -326,7 +326,15 @@ Both models are evaluated on the same 534 days, January 2025 to June 2026, and e
 
 ![LSTM Forecasts](ltsm_24h_forecasts.png)
 
-The forecast follows the general shape of the day but in a flattened, smoothed-out version of it. Sharp peaks get rounded off and sudden drops get missed entirely. One sample is a clear case: actual prices swing from $8 to $65 and back down over the day, while the forecast stays in a tight $25-35 band the whole time, landing an MAE of $11.25 on that sample despite missing the peak by 30+ dollars at its sharpest point. The model has learned the average behavior of a typical day rather than the specific shape of this one. That is consistent with only 10 epochs of training and a 48-hour input window that gives it limited context to react to what is actually unfolding.
+Three days, selected by rule rather than by hand: the lowest-error day, the day whose error is closest to the median, and the day with the highest actual price. The spike day and the highest-error day turned out to be the same date, which is itself worth noting.
+
+**The lowest-error day is not a good day.** On 8 March 2025 the MAE is $4.75, the smallest of the test period. But the forecast zigzags while the actual price moves smoothly. It scores well because prices stayed within a $25-45 band all day, so even an uninformed forecast cannot be wrong by much. Small error, not accurate tracking.
+
+**On a typical day the model runs high.** 27 September 2025 sits at $13.13. The forecast is above actual for almost the entire day and misses the evening peak, predicting $43 against an actual of $61.
+
+**On the spike day the forecast is inverted.** 26 January 2026 is the highest-priced day in the test set. Actual prices run $1,200 to $1,875 overnight, then collapse to around $130 by mid-afternoon. The forecast does close to the opposite: roughly $350 during the actual peak, rising to $1,150 in the afternoon once prices have already fallen. MAE for the day is $737.
+
+That day is also the model's worst. The failure is not distributed evenly across the test period; it concentrates on exactly the day with the most money at stake.
 
 ### NOTE
 The feature scaler and the winsorization cap were originally computed on the full dataset, including the 2025-2026 test period, which let test data influence preprocessing decisions applied to the training set. Both now fit on training data only. The LSTM's metrics improved after the fix, which suggests the leakage had been working against the model rather than flattering it.
