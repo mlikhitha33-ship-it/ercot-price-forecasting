@@ -308,7 +308,7 @@ Sin/cos encoding applies throughout for the same reason: December and January ar
 ## Results
 
 ---
-Both models are evaluated on the same 534 days, January 2025 to June 2026, and each test hour is scored exactly once. The winsorization cap and feature scaler used by the LSTM are both fit on training data only (2019-2023), fixing two earlier leakage issues where test period values were influencing the preprocessing.
+Both models are evaluated on the same 534 days, January 2025 to June 2026, and each test hour is scored exactly once. The winsorization cap and feature scaler used by the LSTM are both fit on training data only (2019-2023).
 
 - **MAE (Mean Absolute Error)** is the average absolute difference between predicted and actual prices across all test hours.
 - **RMSE (Root Mean Squared Error)** squares each error before averaging then takes the square root. Large errors are penalized much more heavily than small ones which matters during price spikes. It tells you how badly the model performs when it is really wrong.
@@ -328,8 +328,7 @@ Both models are evaluated on the same 534 days, January 2025 to June 2026, and e
 
 The forecast follows the general shape of the day but in a flattened, smoothed-out version of it. Sharp peaks get rounded off and sudden drops get missed entirely. One sample is a clear case: actual prices swing from $8 to $65 and back down over the day, while the forecast stays in a tight $25-35 band the whole time, landing an MAE of $11.25 on that sample despite missing the peak by 30+ dollars at its sharpest point. The model has learned the average behavior of a typical day rather than the specific shape of this one. That is consistent with only 10 epochs of training and a 48-hour input window that gives it limited context to react to what is actually unfolding.
 
-### Reading the numbers
-
+### NOTE
 The feature scaler and the winsorization cap were originally computed on the full dataset, including the 2025-2026 test period, which let test data influence preprocessing decisions applied to the training set. Both now fit on training data only. The LSTM's metrics improved after the fix, which suggests the leakage had been working against the model rather than flattering it.
 
 On `price_lag_168h`: the feature is in the model's inputs, so the claim that the LSTM cannot see last week's price is not accurate. Each of the 48 input timesteps carries its own 168-hour lag, giving the model a view of prices from 168 to 216 hours back. The limitation is different: those values describe the input window, not the forecast window. To use last week's price for hour 20 of a 24-hour forecast, the model must carry it through its hidden state rather than receive it directly. Extending the lookback to 168 hours, listed in the next section, would give it that signal throughout.
