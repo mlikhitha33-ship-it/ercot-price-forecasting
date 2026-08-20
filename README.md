@@ -325,7 +325,7 @@ Note: MAPE has been removed since is generally a poor choice for wholesale elect
 
 ### Comparing LSTM Sample forecasts vs actual
 
-Each panel reports MAE, which on a single day means the average miss across those 24 hours, in dollars. RMSE over 24 hours would be dominated by one or two bad hours rather than describing the day. Modified MAPE would be misleading in the other direction, since it is most sensitive to cheap hours and would flatter a day like 26 January where prices ran in the hundreds. RMSE and modified MAPE are reported over the full test period instead, where the tail behaviour they measure is the point.
+Each panel reports MAE, which on a single day means the average miss across those 24 hours, in dollars. RMSE over 24 hours would be dominated by one or two bad hours rather than describing the day. Modified MAPE would be misleading in the other direction, since it is most sensitive to cheap hours.
 
 ![LSTM Forecasts](ltsm_24h_forecasts.png)
 
