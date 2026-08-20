@@ -236,7 +236,7 @@ Parameters: 218,712
 The baseline takes the price from 168 hours ago.The LSTM has no such rule. It is given examples and left to work out the mapping itself.
 Each position produces one training sample. The input is not one number per hour. Each hour is a row of 20 features, so a single sample looks like this:
 
-    INPUT: 48 rows x 20 columns
+    INPUT: hours 1-48, 48 rows x 20 columns
     ┌──────────────────────────────────────────────────────────────── ┐
     │ hour   price   hour_sin   hour_cos   lag_1h   ...   roll_7d_mean│
     │   1    15.54      0.000      1.000    18.49   ...          25.67│
@@ -246,7 +246,7 @@ Each position produces one training sample. The input is not one number per hour
     │  48    20.79     -0.259      0.966    22.02   ...          23.60│
     └──────────────────────────────────────────────────────────────── ┘
 
-    OUTPUT: 24 prices
+    OUTPUT: hours 49-72, 24 price
     [ 17.60, 17.22, 16.88, 17.51, ... , 16.71 ]
 
 The output is prices only, one per hour for the next 24 hours. The model is not asked to predict the features, just the price.
