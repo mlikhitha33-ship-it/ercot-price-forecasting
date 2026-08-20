@@ -356,13 +356,7 @@ On 26 January 2026 is the highest-priced day in the test set. Actual prices run 
 ### NOTE
 The feature scaler and the winsorization cap were originally computed on the full dataset, including the 2025-2026 test period, which let test data influence preprocessing decisions applied to the training set. Both now fit on training data only. The LSTM's metrics improved after the fix, which suggests the leakage had been working against the model rather than flattering it.
 
-### Training curve
-
-![LSTM Training Curve](lstm_training_curve.png)
-
-The training loss is still declining by epoch 10, so more epochs may help. Validation loss is flat and sits below training loss throughout. The usual rule is: train until validation loss stops falling, then stop. That assumes validation loss reflects how well the model is learning. Here it may not. The red line is flat, therefore stop isn't a safe conclusion.
-
-### Forecast error by horizon
+### Forecast error by hour of day
 
 ![Horizon MAE](lstm_horizon_mae.png)
 
@@ -371,6 +365,12 @@ Every test forecast starts at midnight, so the horizon axis maps directly onto h
 Error is lowest overnight, around $9-12 from midnight to 4am. It peaks at $32 at 7pm, then falls back to $14 by 11pm. It does not rise steadily with distance: h+9 and h+10 are lower than h+7 and h+8, and the last three hours of the forecast are among the most accurate despite being the furthest ahead.
 
 So distance is not what drives the error. Time of day is. The model is least reliable in the evening, which is exactly where the EDA found the daily price peak: median price tops out at 7pm at $39, and the model's error tops out at the same hour at $32.
+
+### Training curve
+
+![LSTM Training Curve](lstm_training_curve.png)
+
+The training loss is still declining by epoch 10, so more epochs may help. Validation loss is flat and sits below training loss throughout. The usual rule is: train until validation loss stops falling, then stop. That assumes validation loss reflects how well the model is learning. Here it may not. The red line is flat, therefore stop isn't a safe conclusion.
 
 ---
 
