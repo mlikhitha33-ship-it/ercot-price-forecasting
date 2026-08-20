@@ -370,7 +370,7 @@ So distance is not what drives the error. Time of day is. The model is least rel
 
 ![LSTM Training Curve](lstm_training_curve.png)
 
-The training loss is still declining by epoch 10, so more epochs may help. Validation loss is flat and sits below training loss throughout. The usual rule is: train until validation loss stops falling, then stop. That assumes validation loss reflects how well the model is learning. Here it may not. The red line is flat, therefore stop isn't a safe conclusion.
+The training loss is still declining by epoch 10, so more epochs may help. Validation loss is flat and sits below training loss throughout. The usual rule is: train until validation loss stops falling, then stop. That assumes validation loss reflects how well the model is learning. Here it may not. 2024 has few spikes compared with 2022 and 2023,so there's little for training to improve on.
 
 ---
 
