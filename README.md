@@ -322,7 +322,7 @@ Sin/cos encoding applies throughout for the same reason: December and January ar
 ---
 
 **Training choices:**
-- **Huber loss** instead of MSE. With a $8,999/MWh spike in the training data, MSE would pull the model heavily toward predicting extremes.
+- **Huber loss** instead of MSE. With a $8,999/MWh spike in the training data, MSE would pull the model heavily toward predicting extremes. MSE is never used in training
 - **Winsorized prices** at the 99.9th percentile before scaling. Without this, MinMaxScaler compresses normal range prices into a very narrow band near zero.
 - **Chronological split**: 2019-2023 train, 2024 validation, 2025-2026 test. Time series data cannot be randomly shuffled without leaking future information into training.
 - **Gradient clipping** at max_norm=1.0 to stabilize training on a volatile series.
