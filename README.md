@@ -359,7 +359,7 @@ On `price_lag_168h`: the feature is in the model's inputs, so the claim that the
 
 ![LSTM Training Curve](lstm_training_curve.png)
 
-The training loss is still declining by epoch 10, so more epochs may help. However, Validation loss is flat and sits below training loss throughout.
+The training loss is still declining by epoch 10, so more epochs may help. Validation loss is flat and sits below training loss throughout.The usual rule is: train until validation loss stops falling, then stop. That assumes validation loss reflects how well the model is learning. Here it may not. The red line is flat, but is  therefore stop isn't a safe conclusion.
 
 ### Forecast error by horizon
 
