@@ -328,13 +328,11 @@ Both models are evaluated on the same 534 days, January 2025 to June 2026, and e
 
 Three days, selected by rule rather than by hand: the lowest-error day, the day whose error is closest to the median, and the day with the highest actual price. The spike day and the highest-error day turned out to be the same date, which is itself worth noting.
 
-**The lowest-error day is not a good day.** On 8 March 2025 the MAE is $4.75, the smallest of the test period. But the forecast zigzags while the actual price moves smoothly. It scores well because prices stayed within a $25-45 band all day, so even an uninformed forecast cannot be wrong by much. Small error, not accurate tracking.
+On 8 March 2025 the MAE is $4.75, the smallest of the test period. But the forecast zigzags while the actual price moves smoothly. It scores well because prices stayed within a $25-45 band all day. Small error, but lacks not accurate tracking.
 
-**On a typical day the model runs high.** 27 September 2025 sits at $13.13. The forecast is above actual for almost the entire day and misses the evening peak, predicting $43 against an actual of $61.
+On 27 September 2025 sits at $13.13. The forecast is above actual for almost the entire day and misses the evening peak, predicting $43 against an actual of $61.
 
-**On the spike day the forecast is inverted.** 26 January 2026 is the highest-priced day in the test set. Actual prices run $1,200 to $1,875 overnight, then collapse to around $130 by mid-afternoon. The forecast does close to the opposite: roughly $350 during the actual peak, rising to $1,150 in the afternoon once prices have already fallen. MAE for the day is $737.
-
-That day is also the model's worst. The failure is not distributed evenly across the test period; it concentrates on exactly the day with the most money at stake.
+On 26 January 2026 is the highest-priced day in the test set. Actual prices run $1,200 to $1,875 overnight, then collapse to around $130 by mid-afternoon. The forecast does close to the opposite: roughly $350 during the actual peak, rising to $1,150 in the afternoon once prices have already fallen. MAE for the day is $737.That day is also the model's worst. The failure is not distributed evenly across the test period; it concentrates on exactly the day with the most money at stake.
 
 ### NOTE
 The feature scaler and the winsorization cap were originally computed on the full dataset, including the 2025-2026 test period, which let test data influence preprocessing decisions applied to the training set. Both now fit on training data only. The LSTM's metrics improved after the fix, which suggests the leakage had been working against the model rather than flattering it.
