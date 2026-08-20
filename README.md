@@ -193,13 +193,14 @@ Performance then deteriorates sharply. On 4 and 5 January the forecast predicts 
 This is the limitation of the approach stated directly. It has no awareness of current market conditions, only of what occurred seven days earlier. Where this week resembles last week it is difficult to beat. Where it does not, the method has no mechanism to detect the difference.
 
 Baseline Results (Test: 2025-2026, hourly)
+```
 ---------------------------------------------
 Method: Seasonal Naive (same hour, 1 week earlier)
 MAE  : $19.43/MWh
 RMSE : $78.80/MWh
 MAPE : 71.7%
 ---------------------------------------------
-
+```
 ---
 
 ### Model 2: LSTM (PyTorch)
