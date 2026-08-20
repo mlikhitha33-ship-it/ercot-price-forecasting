@@ -353,8 +353,6 @@ On 26 January 2026 is the highest-priced day in the test set. Actual prices run 
 ### NOTE
 The feature scaler and the winsorization cap were originally computed on the full dataset, including the 2025-2026 test period, which let test data influence preprocessing decisions applied to the training set. Both now fit on training data only. The LSTM's metrics improved after the fix, which suggests the leakage had been working against the model rather than flattering it.
 
-On `price_lag_168h`: the feature is in the model's inputs, so the claim that the LSTM learn last week's price. 
-
 ### Training curve
 
 ![LSTM Training Curve](lstm_training_curve.png)
