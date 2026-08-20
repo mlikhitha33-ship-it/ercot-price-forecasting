@@ -320,8 +320,8 @@ Both models are evaluated on the same 534 days, January 2025 to June 2026, and e
 |---|---|---|---|
 | MAE | $19.43/MWh | $18.50/MWh | 4.8% better |
 | RMSE | $78.80/MWh | $55.82/MWh | 29.2% better |
-| Modified MAPE | 71.7% | 93.2% | 30% worse |
 
+Note: MAPE has been removed since is generally a poor choice for wholesale electricity-price forecasting
 
 ### Comparing LSTM Sample forecasts vs actual
 
