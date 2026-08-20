@@ -237,14 +237,14 @@ The baseline takes the price from 168 hours ago.The LSTM has no such rule. It is
 Each position produces one training sample. The input is not one number per hour. Each hour is a row of 20 features, so a single sample looks like this:
 
     INPUT: 48 rows x 20 columns
-    ┌────────────────────────────────────────────────────────────────┐
+    ┌──────────────────────────────────────────────────────────────── ┐
     │ hour   price   hour_sin   hour_cos   lag_1h   ...   roll_7d_mean│
     │   1    15.54      0.000      1.000    18.49   ...          25.67│
     │   2    15.31      0.259      0.966    15.54   ...          25.64│
     │   3    15.46      0.500      0.866    15.31   ...          25.61│
-    │  ...                                                           │
+    │  ...                                                            │
     │  48    20.79     -0.259      0.966    22.02   ...          23.60│
-    └────────────────────────────────────────────────────────────────┘
+    └──────────────────────────────────────────────────────────────── ┘
 
     OUTPUT: 24 prices
     [ 17.60, 17.22, 16.88, 17.51, ... , 16.71 ]
