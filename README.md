@@ -177,6 +177,8 @@ The forecast for hour *t* is the actual price 168 hours earlier, exactly one wee
 
 There is no training step. The forecast for any hour is the price from the same hour one week earlier, so the method needs no fitted parameters and no training window.It only needs the previous week of actual prices at prediction time.ERCOT weekly demand patterns are consistent. Tuesday evening this week looks a lot like Tuesday evening last week.
 
+**Analysis**
+
 The chart below zooms into a single week, 1 to 7 January 2025.
 
 ![Baseline Forecast](baseline_forecast.png)
