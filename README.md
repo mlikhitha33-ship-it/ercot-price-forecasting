@@ -238,7 +238,7 @@ Evaluation : 534 daily forecasts, each starting at midnight, 2025-2026
 | Split | Period | Hours | Purpose |
 |---|---|---|---|
 | Train | 2019-2023 | 43,651 | The model learns from these |
-| Validation | 2024 | 8,783 | Checked each epoch; decides which weights to save |
+| Validation | 2024 | 8,783 | Scored after each epoch; the best-scoring epoch's weights are the ones kept |
 | Test | 2025-2026 | 12,791 | Never seen during training; produces the reported metrics |
 
 
