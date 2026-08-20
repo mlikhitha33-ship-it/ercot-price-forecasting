@@ -323,6 +323,8 @@ Both models are evaluated on the same 534 days, January 2025 to June 2026, and e
 
 ### Comparing LSTM Sample forecasts vs actual
 
+Each panel reports MAE, which on a single day means the average miss across those 24 hours, in dollars. RMSE over 24 hours would be dominated by one or two bad hours rather than describing the day. Modified MAPE would be misleading in the other direction, since it is most sensitive to cheap hours and would flatter a day like 26 January where prices ran in the hundreds. RMSE and modified MAPE are reported over the full test period instead, where the tail behaviour they measure is the point.
+
 ![LSTM Forecasts](ltsm_24h_forecasts.png)
 
 Three days, chosen automatically: the lowest-error day, the day whose error is closest to the median, and the day with the highest actual price.
