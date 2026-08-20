@@ -359,7 +359,7 @@ On `price_lag_168h`: the feature is in the model's inputs, so the claim that the
 
 ![LSTM Training Curve](lstm_training_curve.png)
 
-The training loss is still declining by epoch 10, so more epochs may help. However, validation loss is already fairly flat, so additional training should be monitored with early stopping rather than assuming more epochs will automatically improve test performance.
+The training loss is still declining by epoch 10, so more epochs may help. However, Validation loss is flat and sits below training loss throughout.
 
 ### Forecast error by horizon
 
