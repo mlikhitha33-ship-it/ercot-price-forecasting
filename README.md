@@ -307,7 +307,6 @@ Sin/cos encoding applies throughout for the same reason: December and January ar
 
 ## Results
 
----
 Both models are evaluated on the same 534 days, January 2025 to June 2026, and each test hour is scored exactly once. The winsorization cap and feature scaler used by the LSTM are both fit on training data only (2019-2023).
 
 - **MAE (Mean Absolute Error)** is the average absolute difference between predicted and actual prices across all test hours.
@@ -326,7 +325,7 @@ Both models are evaluated on the same 534 days, January 2025 to June 2026, and e
 
 ![LSTM Forecasts](ltsm_24h_forecasts.png)
 
-Three days, selected by rule rather than by hand: the lowest-error day, the day whose error is closest to the median, and the day with the highest actual price. The spike day and the highest-error day turned out to be the same date, which is itself worth noting.
+Three days, chosen automatically: the lowest-error day, the day whose error is closest to the median, and the day with the highest actual price.
 
 On 8 March 2025 the MAE is $4.75, the smallest of the test period. But the forecast zigzags while the actual price moves smoothly. It scores well because prices stayed within a $25-45 band all day. Small error, but lacks not accurate tracking.
 
