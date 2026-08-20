@@ -116,7 +116,7 @@ Analysis:
     - which hour is most likely to break $100? In August, 3pm does that 49% of the time. 6pm only 33%. So 3pm is less expensive on an ordinary day but goes extreme far           more often.
 
 
-- **Summer and winter have opposite daily shapes.** *(Chart 2: % of Hours Above $100, by Month and Hour)* August spike risk peaks at 3pm. February February's highest cell reaches 8% at 7am and its afternoon and evening cells sit at similar levels. There is no single daily price shape to learn. The daily price pattern changes with the season. In summer, prices are most likely to break $100 in the afternoon. In winter, in the early morning. A model with a single set of hour-of-day features has to represent both with the same parameters.
+- **Summer and winter have opposite daily shapes.** *(Chart 2: % of Hours Above $100, by Month and Hour)* August spike risk peaks at 3pm. February's highest cell reaches 8% at 7am and its afternoon and evening cells sit at similar levels. There is no single daily price shape to learn. The daily price pattern changes with the season. In summer, prices are most likely to break $100 in the afternoon. In winter, in the early morning. A model with a single set of hour-of-day features has to represent both with the same parameters.
 
 - **The market runs in two modes.** *(Charts 3 and 4: Price Distribution, Market Regimes Over Time)* 85.6% of hours sit below $50/MWh, the routine market, predictable week to week. The other 14.4% are elevated or spike hours. Any model has to deal with both routine and spike hours and tuning for one costs the accuracy on other. Getting the routine ones right tends to mean smoothing away exactly the spikes that matter most
   
