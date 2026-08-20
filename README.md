@@ -247,7 +247,6 @@ Each position produces one training sample. The input is not one number per hour
     │  ...                                                            │
     │  48    20.79     -0.259      0.966    22.02   ...          23.60│
     └──────────────────────────────────────────────────────────────── ┘
-    OUTPUT:
    Sample 1
 INPUT : hours  1-48
 OUTPUT: hours 49-72
