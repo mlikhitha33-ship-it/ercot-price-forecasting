@@ -111,7 +111,10 @@ Analysis:
 
 - **Hour of day matters more than expected.** *(Chart 1: What a Normal Hour Costs)* Prices sit around $17/MWh between 2-4am and climb to $37-39/MWh between 5-7pm. That is more than a 2x swing within a single day.
 
-- **The expensive hour and the spike hour are not the same hour.** *(Charts 1 and 2 together)* The median peaks at 7pm. The share of hours above $100 peaks at 3pm. In August, 49% of 3pm hours cleared $100, compared to 33% at 6pm. Those are two different things: the evening peak is demand, the afternoon peak is scarcity, when air conditioning load is climbing and reserves are tightest. A battery operator positions for the evening spread, but the outsized days happen in the afternoon.
+- **The expensive hour and the spike hour are not the same hour.** *(Charts 1 and 2 together)* The median peaks at 7pm.The median price peaks at 7pm, but the share of hours above $100 peaks at 3pm
+- which hour costs most on a typical day?: 7 PM
+- which hour is most likely to break $100? In August, 3pm does that 49% of the time. 6pm only 33%. So 3pm is less expensive on an ordinary day but goes extreme far more often.
+
 
 - **Summer and winter have opposite daily shapes.** *(Chart 2: % of Hours Above $100, by Month and Hour)* August spike risk peaks at 3pm. February February's highest cell reaches 8% at 7am and its afternoon and evening cells sit at similar levels. There is no single daily price shape to learn. The daily price pattern changes with the season. In summer, prices are most likely to break $100 in the afternoon. In winter, in the early morning. A model with a single set of hour-of-day features has to represent both with the same parameters.
 
