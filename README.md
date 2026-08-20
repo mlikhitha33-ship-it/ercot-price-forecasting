@@ -196,9 +196,9 @@ Baseline Results (Test: 2025-2026, hourly)
 ```
 ---------------------------------------------
 Method: Seasonal Naive (same hour, 1 week earlier)
-MAE  : $19.43/MWh
-RMSE : $78.80/MWh
-MAPE : 71.7%
+Mean Absolute Error (MAE) : $19.43/MWh
+Mean Squared Error (RMSE): $78.80/MWh
+Mean Absolute Percentage Error (MAPE): 71.7%
 ---------------------------------------------
 ```
 ---
