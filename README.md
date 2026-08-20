@@ -473,6 +473,21 @@ Image('ercot_eda.png')          # after 2_eda.py
 Image('baseline_forecast.png')  # after 4_sarima.py
 Image('lstm_24h_forecasts.png') # after 5_lstm.py
 ```
+### Script reference: `5_lstm.py`
+
+Functions in execution order.
+
+| Function | Purpose |
+|---|---|
+| `EnergyDataset` | Turns the feature table into training samples. Each item is 48 hours of features paired with the 24 prices that followed. The sliding window means one sample per starting hour. |
+| `PriceLSTM` | The model. Two LSTM layers read the 48-hour sequence, and a fully connected head maps the final hidden state to 24 price predictions in one pass. |
+| `train_model` | Runs 10 epochs. Huber loss for robustness to spikes, gradient clipping for stability, and a learning rate that halves when validation stops improving. Saves the weights from whichever epoch had the lowest validation loss. |
+| `evaluate_model` | Loads the saved weights, predicts on the test set, converts predictions back to dollars, and returns MAE, RMSE and modified MAPE. |
+| `plot_training_curve` | Training and validation loss per epoch. |
+| `plot_forecasts` | Three days from the test period, chosen by rule: lowest error, median error, and highest actual price. |
+| `plot_horizon_mae` | Average error at each of the 24 forecast hours. Since every forecast starts at midnight, this is error by hour of day. |
+
+The main block handles the chronological split, fits the scaler on training data only, builds the three DataLoaders, and filters the test set down to one forecast per day.
 
 Each script saves output back to your Drive folder so results persist between sessions.
 
