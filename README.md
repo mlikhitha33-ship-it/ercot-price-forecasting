@@ -205,7 +205,9 @@ Mean Absolute Percentage Error (MAPE): 71.7%
 
 ### Model 2: LSTM (PyTorch)
 
-An LSTM (Long Short-Term Memory network) is a recurrent neural network built for sequential data. The naive baseline copies last week. It works for routine hours but has no awareness of what is happening right now. If prices have been climbing for three days, or a heat wave is building, or the last 48 hours look nothing like the same period last week, the naive baseline cannot respond. The LSTM sees 48 hours of recent price history and rolling statistics, giving it the context to detect when this week is shaping up differently from last week. That is where the value should come from.
+An LSTM (Long Short-Term Memory network) is a recurrent neural network built for sequential data. The naive baseline copies last week. It works for routine hours but has no awareness of current conditions. If prices have been climbing for three days, or the last 48 hours look nothing like the same period a week earlier, the baseline cannot respond.
+
+The LSTM sees 48 hours of recent price history and rolling statistics, which should give it the context to detect when this week is developing differently from last week. Whether that context is sufficient is the question the results section answers.That is where the value should come from.
 
 **Architecture:**
 ```
