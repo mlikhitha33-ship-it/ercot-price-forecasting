@@ -173,13 +173,11 @@ Instead of SARIMA, a simpler baseline was used: predict each hour's price as the
 
 The forecast for hour *t* is the actual price 168 hours earlier, exactly one week. This preserves both hour of day and day of week.
 
-**Data used**
+**Data used: January 2025 to June 2026**
 
 There is no training step. The forecast for any hour is the price from the same hour one week earlier, so the method needs no fitted parameters and no training window.It only needs the previous week of actual prices at prediction time.ERCOT weekly demand patterns are consistent. Tuesday evening this week looks a lot like Tuesday evening last week.
 
 The chart below zooms into a single week, 1 to 7 January 2025.
-
-The metrics MAE and RMSE are calculated across the entire test period, January 2025 through June 2026, roughly 12,800 hours. We later evaluate the LSTM model on that same test period. That shared test window is what makes the two sets of metrics comparable, with one caveat about how the hours are counted, covered in the results section.
 
 ![Baseline Forecast](baseline_forecast.png)
 
@@ -192,6 +190,8 @@ The method performs well for the first two days. The previous Wednesday closely 
 Performance then deteriorates sharply. On 4 and 5 January the forecast predicts $20-42 against actual prices near $1. On 6 January it predicts $17 against an actual of $104. The same method, within the same week, four days apart.
 
 This is the limitation of the approach stated directly. It has no awareness of current market conditions, only of what occurred seven days earlier. Where this week resembles last week it is difficult to beat. Where it does not, the method has no mechanism to detect the difference.
+
+The metrics MAE and RMSE are calculated across the entire test period, January 2025 through June 2026, roughly 12,800 hours. We later evaluate the LSTM model on that same test period. That shared test window is what makes the two sets of metrics comparable, with one caveat about how the hours are counted, covered in the results section.
 
 Baseline Results (Test: 2025-2026, hourly)
 ```
